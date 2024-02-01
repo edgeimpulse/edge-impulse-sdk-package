@@ -3,7 +3,8 @@ on:
   workflow_dispatch:
   pull_request:
   push:
-    branches: [main]
+    tags:
+      - '*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
