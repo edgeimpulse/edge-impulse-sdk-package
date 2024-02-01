@@ -31,3 +31,12 @@ jobs:
           packchk-version: 1.3.98
           gen-pack-script: ./gen_pack.sh
           gen-pack-output: ./output
+
+      - uses: actions/create-release@v1
+        if: github.event_name == 'release'
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: ${{ github.event.release.body }}
+          draft: false
+          prerelease: false
