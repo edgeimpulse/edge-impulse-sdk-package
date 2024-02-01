@@ -4,8 +4,6 @@ on:
   pull_request:
   push:
     branches: [main]
-  release:
-    types: [published]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,7 +19,6 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch tags
-        if: github.event_name == 'release'
         run: |
           git fetch --tags --force
 
@@ -39,7 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
 
@@ -52,4 +49,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./output/*.pack
           asset_name: ${{ github.ref }}.pack
-          asset_content_type: application/zip
+          asset_content_type: application/zipgh t 
