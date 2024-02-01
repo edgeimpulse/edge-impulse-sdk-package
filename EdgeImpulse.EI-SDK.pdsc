@@ -8,7 +8,7 @@
 	<url></url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<releases>
-		<release version="1.40.12">
+		<release version="1.43.2">
 			EI-SDK
 		</release>
 	</releases>
@@ -55,7 +55,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.40.12">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.43.2">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>

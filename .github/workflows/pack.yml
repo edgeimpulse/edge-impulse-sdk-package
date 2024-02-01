@@ -50,4 +50,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./output/*.pack
           asset_name: ${{ github.ref }}.pack
-          asset_content_type: application/zipgh t 
+          asset_content_type: application/zip

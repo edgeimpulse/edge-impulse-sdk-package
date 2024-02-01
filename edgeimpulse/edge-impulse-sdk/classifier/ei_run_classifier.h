@@ -72,6 +72,11 @@ extern "C" EI_IMPULSE_ERROR run_inference(const ei_impulse_t *impulse, ei_featur
 extern "C" EI_IMPULSE_ERROR run_classifier_image_quantized(const ei_impulse_t *impulse, signal_t *signal, ei_impulse_result_t *result, bool debug);
 static EI_IMPULSE_ERROR can_run_classifier_image_quantized(const ei_impulse_t *impulse, ei_learning_block_t block_ptr);
 
+#if EI_CLASSIFIER_LOAD_IMAGE_SCALING
+EI_IMPULSE_ERROR ei_scale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fmatrix);
+EI_IMPULSE_ERROR ei_unscale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fmatrix);
+#endif // EI_CLASSIFIER_LOAD_IMAGE_SCALING
+
 /* Private variables ------------------------------------------------------- */
 
 static uint64_t classifier_continuous_features_written = 0;
@@ -81,62 +86,6 @@ static RecognizeEvents *avg_scores = NULL;
 
 /* These functions (up to Public functions section) are not exposed to end-user,
 therefore changes are allowed. */
-
-#if EI_CLASSIFIER_LOAD_IMAGE_SCALING
-static const float torch_mean[] = { 0.485, 0.456, 0.406 };
-static const float torch_std[] = { 0.229, 0.224, 0.225 };
-
-static EI_IMPULSE_ERROR scale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fmatrix) {
-    if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_TORCH) {
-        // @todo; could we write some faster vector math here?
-        for (size_t ix = 0; ix < fmatrix->rows * fmatrix->cols; ix += 3) {
-            fmatrix->buffer[ix + 0] = (fmatrix->buffer[ix + 0] - torch_mean[0]) / torch_std[0];
-            fmatrix->buffer[ix + 1] = (fmatrix->buffer[ix + 1] - torch_mean[1]) / torch_std[1];
-            fmatrix->buffer[ix + 2] = (fmatrix->buffer[ix + 2] - torch_mean[2]) / torch_std[2];
-        }
-    }
-    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_0_255) {
-        int scale_res = numpy::scale(fmatrix, 255.0f);
-        if (scale_res != EIDSP_OK) {
-            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
-            return EI_IMPULSE_DSP_ERROR;
-        }
-    }
-    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_MIN1_1) {
-        int scale_res = numpy::scale(fmatrix, 2.0f);
-        if (scale_res != EIDSP_OK) {
-            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
-            return EI_IMPULSE_DSP_ERROR;
-        }
-        scale_res = numpy::subtract(fmatrix, 1.0f);
-        if (scale_res != EIDSP_OK) {
-            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
-            return EI_IMPULSE_DSP_ERROR;
-        }
-    }
-
-    return EI_IMPULSE_OK;
-}
-
-static EI_IMPULSE_ERROR unscale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fmatrix) {
-    if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_TORCH) {
-        // @todo; could we write some faster vector math here?
-        for (size_t ix = 0; ix < fmatrix->rows * fmatrix->cols; ix += 3) {
-            fmatrix->buffer[ix + 0] = (fmatrix->buffer[ix + 0] * torch_std[0]) + torch_mean[0];
-            fmatrix->buffer[ix + 1] = (fmatrix->buffer[ix + 1] * torch_std[1]) + torch_mean[1];
-            fmatrix->buffer[ix + 2] = (fmatrix->buffer[ix + 2] * torch_std[2]) + torch_mean[2];
-        }
-    }
-    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_0_255) {
-        int scale_res = numpy::scale(fmatrix, 1 / 255.0f);
-        if (scale_res != EIDSP_OK) {
-            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
-            return EI_IMPULSE_DSP_ERROR;
-        }
-    }
-    return EI_IMPULSE_OK;
-}
-#endif
 
 
 /**
@@ -201,7 +150,7 @@ extern "C" EI_IMPULSE_ERROR run_inference(
 #if EI_CLASSIFIER_LOAD_IMAGE_SCALING
         // we do not plan to have multiple dsp blocks with image
         // so just apply scaling to the first one
-        EI_IMPULSE_ERROR scale_res = scale_fmatrix(&block, fmatrix[0].matrix);
+        EI_IMPULSE_ERROR scale_res = ei_scale_fmatrix(&block, fmatrix[0].matrix);
         if (scale_res != EI_IMPULSE_OK) {
             return scale_res;
         }
@@ -216,7 +165,7 @@ extern "C" EI_IMPULSE_ERROR run_inference(
 
 #if EI_CLASSIFIER_LOAD_IMAGE_SCALING
         // undo scaling
-        scale_res = unscale_fmatrix(&block, fmatrix[0].matrix);
+        scale_res = ei_unscale_fmatrix(&block, fmatrix[0].matrix);
         if (scale_res != EI_IMPULSE_OK) {
             return scale_res;
         }
@@ -594,6 +543,98 @@ extern "C" EI_IMPULSE_ERROR run_classifier_image_quantized(
 
 /* Thread carefully: public functions are not to be changed
 to preserve backwards compatibility. */
+
+#if EI_CLASSIFIER_LOAD_IMAGE_SCALING
+static const float torch_mean[] = { 0.485, 0.456, 0.406 };
+static const float torch_std[] = { 0.229, 0.224, 0.225 };
+
+EI_IMPULSE_ERROR ei_scale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fmatrix) {
+    if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_TORCH) {
+        // @todo; could we write some faster vector math here?
+        for (size_t ix = 0; ix < fmatrix->rows * fmatrix->cols; ix += 3) {
+            fmatrix->buffer[ix + 0] = (fmatrix->buffer[ix + 0] - torch_mean[0]) / torch_std[0];
+            fmatrix->buffer[ix + 1] = (fmatrix->buffer[ix + 1] - torch_mean[1]) / torch_std[1];
+            fmatrix->buffer[ix + 2] = (fmatrix->buffer[ix + 2] - torch_mean[2]) / torch_std[2];
+        }
+    }
+    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_0_255) {
+        int scale_res = numpy::scale(fmatrix, 255.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+    }
+    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_MIN128_127) {
+        int scale_res = numpy::scale(fmatrix, 255.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+        scale_res = numpy::subtract(fmatrix, 128.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+    }
+    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_MIN1_1) {
+        int scale_res = numpy::scale(fmatrix, 2.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+        scale_res = numpy::subtract(fmatrix, 1.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+    }
+
+    return EI_IMPULSE_OK;
+}
+
+EI_IMPULSE_ERROR ei_unscale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fmatrix) {
+    if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_TORCH) {
+        // @todo; could we write some faster vector math here?
+        for (size_t ix = 0; ix < fmatrix->rows * fmatrix->cols; ix += 3) {
+            fmatrix->buffer[ix + 0] = (fmatrix->buffer[ix + 0] * torch_std[0]) + torch_mean[0];
+            fmatrix->buffer[ix + 1] = (fmatrix->buffer[ix + 1] * torch_std[1]) + torch_mean[1];
+            fmatrix->buffer[ix + 2] = (fmatrix->buffer[ix + 2] * torch_std[2]) + torch_mean[2];
+        }
+    }
+    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_MIN128_127) {
+        int scale_res = numpy::add(fmatrix, 128.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+        scale_res = numpy::scale(fmatrix, 1 / 255.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+    }
+    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_MIN1_1) {
+        int scale_res = numpy::add(fmatrix, 1.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+        scale_res = numpy::scale(fmatrix, 1 / 2.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+    }
+    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_0_255) {
+        int scale_res = numpy::scale(fmatrix, 1 / 255.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+    }
+    return EI_IMPULSE_OK;
+}
+#endif
 
 /**
  * @brief      Init static vars

@@ -46,7 +46,7 @@
 extern "C"
 #endif // defined(__cplusplus) && EI_C_LINKAGE == 1
 
-const char *debug_msgs[] =
+__attribute__((unused)) static const char *debug_msgs[] =
 {
     "NONE", // this one will never show
     "ERR",
