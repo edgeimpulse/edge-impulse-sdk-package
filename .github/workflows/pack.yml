@@ -35,7 +35,6 @@ jobs:
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
-        if: github.event_name == 'release'
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
