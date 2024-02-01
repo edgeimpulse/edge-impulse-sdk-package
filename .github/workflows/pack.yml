@@ -32,11 +32,21 @@ jobs:
           gen-pack-script: ./gen_pack.sh
           gen-pack-output: ./output
 
-      - uses: actions/create-release@v1
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.0
         if: github.event_name == 'release'
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
-          body: ${{ github.event.release.body }}
           draft: false
           prerelease: false
+
+      - name: Upload release asset
+        id: upload-release-asset         
+        uses: actions/upload-release-asset@v1.0.1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./output/*.pack
+          asset_name: ${{ github.ref }}.pack
+          asset_content_type: application/zip
