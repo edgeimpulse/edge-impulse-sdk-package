@@ -43,10 +43,11 @@ jobs:
           gen-pack-script: ./gen_pack.sh
           gen-pack-output: ./output
 
-      - uses: actions/download-artifact@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
         id: download-artifact
-        with:
-          name: artifact.zip
+      - name: List files
+        run: ls -R
 
       - name: Upload release asset
         id: upload-release-asset         
