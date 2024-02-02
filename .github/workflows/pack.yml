@@ -48,5 +48,5 @@ jobs:
         uses: AButler/upload-release-assets@v3.0                  
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          files: ${{ steps.build_cmsis_pack.outputs.pack_file }}
+          files: "/output/*.pack"
           release-id: ${{ steps.create_release.outputs.id}}
