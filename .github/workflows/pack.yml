@@ -51,5 +51,5 @@ jobs:
         uses: AButler/upload-release-assets@v3.0                  
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          files: "./output/*.pack"
+          files: "./output/*.pack;EdgeImpulse.EI-SDK.pdsc"
           release-id: ${{ steps.create_release.outputs.id}}
