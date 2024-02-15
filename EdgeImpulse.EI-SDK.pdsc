@@ -7,10 +7,11 @@
 	<description>Edge Impulse SDK</description>
 	<url></url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
+	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.43.2">
-			EI-SDK
-		</release>
+		<release version="1.45.1" tag="v1.45.1" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/archive/refs/tags/v1.45.1.zip">
+      		EI-SDK
+    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -55,7 +56,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.43.2">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.45.1">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
