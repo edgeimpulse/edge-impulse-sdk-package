@@ -9,7 +9,13 @@
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.45.1" tag="v1.45.1" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/archive/refs/tags/v1.45.1.zip">
+		<release version="1.45.3" tag="v1.45.3" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/archive/refs/tags/v1.45.3.zip">
+      		EI-SDK
+    	</release>	
+		<release version="1.45.1" tag="v1.45.1" url="https://api.github.com/repos/edgeimpulse/edge-impulse-sdk-pack/zipball/v1.45.1">
+      		EI-SDK
+    	</release>
+		<release version="1.43.2" tag="v1.43.2" url="https://api.github.com/repos/edgeimpulse/edge-impulse-sdk-pack/zipball/v1.43.2">
       		EI-SDK
     	</release>
 	</releases>
@@ -56,7 +62,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.45.1">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.45.3">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
