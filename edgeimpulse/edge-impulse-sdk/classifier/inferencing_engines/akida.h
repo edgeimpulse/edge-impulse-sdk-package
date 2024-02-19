@@ -264,6 +264,7 @@ void debug_print(const std::vector<T> vec, const int val_per_row = 3)
 EI_IMPULSE_ERROR run_nn_inference(
     const ei_impulse_t *impulse,
     ei_feature_t *fmatrix,
+    uint32_t learn_block_index,
     uint32_t* input_block_ids,
     uint32_t input_block_ids_size,
     ei_impulse_result_t *result,
@@ -539,6 +540,7 @@ __attribute__((unused)) int extract_tflite_features(signal_t *signal, matrix_t *
 
     ei_learning_block_config_tflite_graph_t ei_learning_block_config = {
         .implementation_version = 1,
+        .classification_mode = EI_CLASSIFIER_CLASSIFICATION_MODE_DSP,
         .block_id = dsp_config->block_id,
         .object_detection = false,
         .object_detection_last_layer = EI_CLASSIFIER_LAST_LAYER_UNKNOWN,

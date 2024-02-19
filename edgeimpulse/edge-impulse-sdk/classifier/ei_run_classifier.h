@@ -119,7 +119,7 @@ __attribute__((unused)) void display_results(ei_impulse_result_t* result)
         ei_printf_float(result->classification[ix].value);
         ei_printf("\n");
     }
-#if EI_CLASSIFIER_HAS_ANOMALY == 1
+#if EI_CLASSIFIER_HAS_ANOMALY
     ei_printf("    anomaly score: ");
     ei_printf_float(result->anomaly);
     ei_printf("\n");
@@ -158,7 +158,7 @@ extern "C" EI_IMPULSE_ERROR run_inference(
 
         result->copy_output = block.keep_output;
 
-        EI_IMPULSE_ERROR res = block.infer_fn(impulse, fmatrix, (uint32_t*)block.input_block_ids, block.input_block_ids_size, result, block.config, debug);
+        EI_IMPULSE_ERROR res = block.infer_fn(impulse, fmatrix, ix, (uint32_t*)block.input_block_ids, block.input_block_ids_size, result, block.config, debug);
         if (res != EI_IMPULSE_OK) {
             return res;
         }
@@ -262,7 +262,7 @@ extern "C" EI_IMPULSE_ERROR process_impulse(const ei_impulse_t *impulse,
         if (block.keep_output) {
             matrix_ptrs[impulse->dsp_blocks_size + ix] = std::unique_ptr<ei::matrix_t>(new ei::matrix_t(1, block.output_features_count));
             features[impulse->dsp_blocks_size + ix].matrix = matrix_ptrs[impulse->dsp_blocks_size + ix].get();
-            features[impulse->dsp_blocks_size+ ix].blockId = block.blockId;
+            features[impulse->dsp_blocks_size + ix].blockId = block.blockId;
         }
     }
 #endif // EI_CLASSIFIER_SINGLE_FEATURE_INPUT

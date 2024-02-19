@@ -380,7 +380,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_visual_ad_struct_f32
                                                                        ei_impulse_result_t *result,
                                                                        float *data,
                                                                        bool debug) {
-#ifdef EI_CLASSIFIER_HAS_VISUAL_ANOMALY
+#if EI_CLASSIFIER_HAS_VISUAL_ANOMALY
     float max_val = 0;
     float sum_val = 0;
     // the feature extractor output will be 1/8 of input
@@ -432,7 +432,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_visual_ad_struct_f32
 
     result->visual_ad_grid_cells = results.data();
     result->visual_ad_count = results.size();
-#endif
+#endif // EI_CLASSIFIER_HAS_VISUAL_ANOMALY
     return EI_IMPULSE_OK;
 }
 

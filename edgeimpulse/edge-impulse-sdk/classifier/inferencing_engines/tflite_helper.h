@@ -277,17 +277,17 @@ EI_IMPULSE_ERROR fill_output_matrix_from_tensor(
 
 EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
     const ei_impulse_t *impulse,
+    ei_learning_block_config_tflite_graph_t *block_config,
     TfLiteTensor* output,
     TfLiteTensor* labels_tensor,
     TfLiteTensor* scores_tensor,
     ei_impulse_result_t *result,
     bool debug
 ) {
-
     EI_IMPULSE_ERROR fill_res = EI_IMPULSE_OK;
 
-    if (impulse->object_detection) {
-        switch (impulse->object_detection_last_layer) {
+    if (block_config->classification_mode == EI_CLASSIFIER_CLASSIFICATION_MODE_OBJECT_DETECTION) {
+        switch (block_config->object_detection_last_layer) {
             case EI_CLASSIFIER_LAST_LAYER_FOMO: {
                 bool int8_output = output->type == TfLiteType::kTfLiteInt8;
                 if (int8_output) {
@@ -467,19 +467,23 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
             }
         }
     }
-    else if (impulse->has_anomaly == 3 && !result->copy_output)
+    else if (block_config->classification_mode == EI_CLASSIFIER_CLASSIFICATION_MODE_VISUAL_ANOMALY)
     {
-        fill_res = fill_result_visual_ad_struct_f32(impulse, result, output->data.f, debug);
+        if (!result->copy_output) {
+            fill_res = fill_result_visual_ad_struct_f32(impulse, result, output->data.f, debug);
+        }
     }
     // if we copy the output, we don't need to process it as classification
-    else if (!result->copy_output)
+    else
     {
-        bool int8_output = output->type == TfLiteType::kTfLiteInt8;
-        if (int8_output) {
-            fill_res = fill_result_struct_i8(impulse, result, output->data.int8, output->params.zero_point, output->params.scale, debug);
-        }
-        else {
-            fill_res = fill_result_struct_f32(impulse, result, output->data.f, debug);
+        if (!result->copy_output) {
+            bool int8_output = output->type == TfLiteType::kTfLiteInt8;
+            if (int8_output) {
+                fill_res = fill_result_struct_i8(impulse, result, output->data.int8, output->params.zero_point, output->params.scale, debug);
+            }
+            else {
+                fill_res = fill_result_struct_f32(impulse, result, output->data.f, debug);
+            }
         }
     }
 
