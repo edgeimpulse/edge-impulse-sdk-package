@@ -9,16 +9,19 @@
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.45.5" tag="v1.45.5" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/archive/refs/tags/v1.45.5.zip">
+		<release version="1.45.6" tag="v1.45.6" date="2024-02-23" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.45.6/EdgeImpulse.EI-SDK.1.45.5.pack">
       		EI-SDK
     	</release>	
-		<release version="1.45.3" tag="v1.45.3" url="https://api.github.com/repos/edgeimpulse/edge-impulse-sdk-pack/zipball/v1.45.3">
+		<release version="1.45.5" tag="v1.45.5" date="2024-02-20" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.45.5/EdgeImpulse.EI-SDK.1.45.5.pack">
       		EI-SDK
     	</release>
-		<release version="1.45.1" tag="v1.45.1" url="https://api.github.com/repos/edgeimpulse/edge-impulse-sdk-pack/zipball/v1.45.1">
+		<release version="1.45.3" tag="v1.45.3" date="2024-02-15" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.45.3/EdgeImpulse.EI-SDK.1.45.1.pack">
       		EI-SDK
     	</release>
-		<release version="1.43.2" tag="v1.43.2" url="https://api.github.com/repos/edgeimpulse/edge-impulse-sdk-pack/zipball/v1.43.2">
+		<release version="1.45.1" tag="v1.45.1" date="2024-02-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.45.1/EdgeImpulse.EI-SDK.1.43.2.pack">
+      		EI-SDK
+    	</release>
+		<release version="1.43.2" tag="v1.43.2" date="2024-02-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.43.2/EdgeImpulse.EI-SDK.1.43.2.pack">
       		EI-SDK
     	</release>
 	</releases>
@@ -65,7 +68,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.45.5">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.45.6">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
