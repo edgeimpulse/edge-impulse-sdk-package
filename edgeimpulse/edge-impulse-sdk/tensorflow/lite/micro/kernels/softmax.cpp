@@ -20,7 +20,7 @@ limitations under the License.
 
 #include "edge-impulse-sdk/tensorflow/lite/micro/kernels/softmax.h"
 
-#include "edge-impulse-sdk/CMSIS/NN/Include/arm_nnfunctions.h"
+#include "arm_nnfunctions.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/common.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/common.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/quantization_util.h"

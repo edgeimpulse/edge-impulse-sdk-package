@@ -19,7 +19,7 @@ limitations under the License.
 ==============================================================================*/
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/pooling.h"
 
-#include "edge-impulse-sdk/CMSIS/NN/Include/arm_nnfunctions.h"
+#include "arm_nnfunctions.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/builtin_op_data.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/common.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/tensor_ctypes.h"
@@ -818,7 +818,7 @@ TfLiteRegistration Register_MAX_POOL_2D() {
 #elif EI_CLASSIFIER_TFLITE_ENABLE_SILABS_MVP == 1
 
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/pooling.h"
-#include "edge-impulse-sdk/CMSIS/NN/Include/arm_nnfunctions.h"
+#include "arm_nnfunctions.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/tensor_ctypes.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/builtin_op_data.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/kernel_util.h"

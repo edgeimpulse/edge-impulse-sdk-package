@@ -2,7 +2,7 @@
 <index schemaVersion="1.0.0" xs:noNamespaceSchemaLocation="PackIndex.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">
   <vendor>EdgeImpulse</vendor>
   <url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/</url>
-  <timestamp>2024-02-23 17:41:15</timestamp>
+  <timestamp>2024-02-26 13:59:56</timestamp>
   <pindex>
     <pdsc url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/tag/v1.45.6" vendor="EdgeImpulse" name="EI-SDK" version="1.45.6"/>
   </pindex>

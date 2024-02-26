@@ -20,7 +20,7 @@ limitations under the License.
 
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/mul.h"
 
-#include "edge-impulse-sdk/CMSIS/NN/Include/arm_nnfunctions.h"
+#include "arm_nnfunctions.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/quantization_util.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/integer_ops/mul.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/process_broadcast_shapes.h"

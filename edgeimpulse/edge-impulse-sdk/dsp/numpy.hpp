@@ -43,12 +43,12 @@
 #include "model-parameters/model_metadata.h"
 #endif
 #if EIDSP_USE_CMSIS_DSP
-#include "edge-impulse-sdk/CMSIS/DSP/Include/arm_math.h"
-#include "edge-impulse-sdk/CMSIS/DSP/Include/arm_const_structs.h"
+#include "arm_math.h"
+#include "arm_const_structs.h"
 #endif
 
 // For the following CMSIS includes, we want to use the C fallback, so include whether or not we set the CMSIS flag
-#include "edge-impulse-sdk/CMSIS/DSP/Include/dsp/statistics_functions.h"
+#include "dsp/statistics_functions.h"
 
 #ifdef __MBED__
 #include "mbed.h"

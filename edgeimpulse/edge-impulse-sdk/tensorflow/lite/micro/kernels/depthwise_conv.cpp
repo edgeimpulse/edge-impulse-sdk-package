@@ -20,7 +20,7 @@ limitations under the License.
 
 #include "edge-impulse-sdk/tensorflow/lite/micro/kernels/depthwise_conv.h"
 
-#include "edge-impulse-sdk/CMSIS/NN/Include/arm_nnfunctions.h"
+#include "arm_nnfunctions.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/builtin_op_data.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/common.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/common.h"
@@ -1158,7 +1158,7 @@ TfLiteRegistration Register_DEPTHWISE_CONV_2D() {
 #include "edge-impulse-sdk/tensorflow/lite/kernels/kernel_util.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/padding.h"
 #include "edge-impulse-sdk/tensorflow/lite/micro/kernels/kernel_util.h"
-#include "edge-impulse-sdk/CMSIS/NN/Include/arm_nnfunctions.h"
+#include "arm_nnfunctions.h"
 
 #include "sl_mvp_ml_depthwise_conv2d.h"
 

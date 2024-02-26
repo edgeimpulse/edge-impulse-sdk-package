@@ -20,7 +20,7 @@ limitations under the License.
 
 #include "edge-impulse-sdk/tensorflow/lite/micro/kernels/fully_connected.h"
 
-#include "edge-impulse-sdk/CMSIS/NN/Include/arm_nnfunctions.h"
+#include "arm_nnfunctions.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/builtin_op_data.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/common.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/common.h"
@@ -1022,7 +1022,7 @@ TfLiteRegistration Register_FULLY_CONNECTED() {
 #elif EI_CLASSIFIER_TFLITE_ENABLE_SILABS_MVP == 1
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/fully_connected.h"
 
-#include "edge-impulse-sdk/CMSIS/NN/Include/arm_nnfunctions.h"
+#include "arm_nnfunctions.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/builtin_op_data.h"
 #include "edge-impulse-sdk/tensorflow/lite/c/common.h"
 #include "edge-impulse-sdk/tensorflow/lite/kernels/internal/common.h"
