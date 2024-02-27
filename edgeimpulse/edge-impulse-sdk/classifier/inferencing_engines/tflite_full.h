@@ -29,7 +29,7 @@
 #include "tensorflow-lite/tensorflow/lite/kernels/register.h"
 #include "tensorflow-lite/tensorflow/lite/model.h"
 #include "tensorflow-lite/tensorflow/lite/optional_debug_tools.h"
-#include "edge-impulse-sdk/tensorflow/lite/kernels/tree_ensemble_classifier.h"
+#include "edge-impulse-sdk/tensorflow/lite/kernels/custom/tree_ensemble_classifier.h"
 #include "edge-impulse-sdk/classifier/ei_fill_result_struct.h"
 #include "edge-impulse-sdk/classifier/ei_model_types.h"
 #include "edge-impulse-sdk/classifier/inferencing_engines/tflite_helper.h"

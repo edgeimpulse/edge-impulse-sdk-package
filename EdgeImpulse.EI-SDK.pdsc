@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/tag/v1.45.6</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/tag/v1.46.1</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.45.6" tag="v1.45.6" date="2024-02-26" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.45.6/EdgeImpulse.EI-SDK.1.45.6.pack">
+		<release version="1.46.1" tag="v1.46.1" date="2024-02-27" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.46.1/EdgeImpulse.EI-SDK.1.46.1.pack">
       		EI-SDK
     	</release>	
+		<release version="1.45.6" tag="v1.45.6" date="2024-02-26" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.45.6/EdgeImpulse.EI-SDK.1.45.6.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.45.5" tag="v1.45.5" date="2024-02-20" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.45.5/EdgeImpulse.EI-SDK.1.45.5.pack">
       		EI-SDK
     	</release>
@@ -68,7 +71,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.45.6">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.46.1">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -233,11 +236,11 @@
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/memory_planner/greedy_memory_planner.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/kernel_util_lite.cpp"/>
-					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/tree_ensemble_classifier.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/portable_tensor_utils.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/quantization_util.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference_portable_tensor_utils.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/tensor_utils.cpp"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/custom/tree_ensemble_classifier.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/core/api/common.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/core/api/error_reporter.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/core/api/op_resolver.cpp"/>
@@ -429,7 +432,6 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/memory_planner/micro_memory_planner.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/memory_planner/memory_plan_struct.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/memory_planner/linear_memory_planner.h"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/tree_ensemble_classifier.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/kernel_util.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/op_macros.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/padding.h"/>
@@ -513,6 +515,7 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/integer_ops/pooling.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/integer_ops/transpose_conv.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/integer_ops/conv.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/custom/tree_ensemble_classifier.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/core/api/tensor_utils.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/core/api/op_resolver.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/core/api/error_reporter.h"/>

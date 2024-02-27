@@ -324,9 +324,6 @@ extern "C" EI_IMPULSE_ERROR process_impulse_continuous(const ei_impulse_t *impul
     uint64_t dsp_start_us = ei_read_timer_us();
 
     size_t out_features_index = 0;
-    bool is_mfcc = false;
-    bool is_mfe = false;
-    bool is_spectrogram = false;
 
     for (size_t ix = 0; ix < impulse->dsp_blocks_size; ix++) {
         ei_model_dsp_t block = impulse->dsp_blocks[ix];
@@ -344,15 +341,12 @@ extern "C" EI_IMPULSE_ERROR process_impulse_continuous(const ei_impulse_t *impul
         /* Switch to the slice version of the mfcc feature extract function */
         if (block.extract_fn == extract_mfcc_features) {
             extract_fn_slice = &extract_mfcc_per_slice_features;
-            is_mfcc = true;
         }
         else if (block.extract_fn == extract_spectrogram_features) {
             extract_fn_slice = &extract_spectrogram_per_slice_features;
-            is_spectrogram = true;
         }
         else if (block.extract_fn == extract_mfe_features) {
             extract_fn_slice = &extract_mfe_per_slice_features;
-            is_mfe = true;
         }
         else {
             ei_printf("ERR: Unknown extract function, only MFCC, MFE and spectrogram supported\n");
@@ -401,25 +395,40 @@ extern "C" EI_IMPULSE_ERROR process_impulse_continuous(const ei_impulse_t *impul
     if (classifier_continuous_features_written >= impulse->nn_input_frame_size) {
         dsp_start_us = ei_read_timer_us();
 
-        ei_feature_t feature;
-        std::unique_ptr<ei::matrix_t> matrix_ptr(new ei::matrix_t(1, impulse->nn_input_frame_size));
-        feature.matrix = matrix_ptr.get();
-        feature.blockId = 0;
+        uint32_t block_num = impulse->dsp_blocks_size + impulse->learning_blocks_size;
 
-        /* Create a copy of the matrix for normalization */
-        for (size_t m_ix = 0; m_ix < impulse->nn_input_frame_size; m_ix++) {
-            feature.matrix->buffer[m_ix] = static_features_matrix.buffer[m_ix];
+        // smart pointer to features array
+        std::unique_ptr<ei_feature_t[]> features_ptr(new ei_feature_t[block_num]);
+        ei_feature_t* features = features_ptr.get();
+
+        // have it outside of the loop to avoid going out of scope
+        std::unique_ptr<ei::matrix_t> *matrix_ptrs = new std::unique_ptr<ei::matrix_t>[block_num];
+
+        out_features_index = 0;
+        // iterate over every dsp block and run normalization
+        for (size_t ix = 0; ix < impulse->dsp_blocks_size; ix++) {
+            ei_model_dsp_t block = impulse->dsp_blocks[ix];
+            matrix_ptrs[ix] = std::unique_ptr<ei::matrix_t>(new ei::matrix_t(1, block.n_output_features));
+            features[ix].matrix = matrix_ptrs[ix].get();
+            features[ix].blockId = block.blockId;
+
+            /* Create a copy of the matrix for normalization */
+            for (size_t m_ix = 0; m_ix < block.n_output_features; m_ix++) {
+                features[ix].matrix->buffer[m_ix] = static_features_matrix.buffer[out_features_index + m_ix];
+            }
+
+            if (block.extract_fn == extract_mfcc_features) {
+                calc_cepstral_mean_and_var_normalization_mfcc(features[ix].matrix, block.config);
+            }
+            else if (block.extract_fn == extract_spectrogram_features) {
+                calc_cepstral_mean_and_var_normalization_spectrogram(features[ix].matrix, block.config);
+            }
+            else if (block.extract_fn == extract_mfe_features) {
+                calc_cepstral_mean_and_var_normalization_mfe(features[ix].matrix, block.config);
+            }
+            out_features_index += block.n_output_features;
         }
 
-        if (is_mfcc) {
-            calc_cepstral_mean_and_var_normalization_mfcc(feature.matrix, impulse->dsp_blocks[0].config);
-        }
-        else if (is_spectrogram) {
-            calc_cepstral_mean_and_var_normalization_spectrogram(feature.matrix, impulse->dsp_blocks[0].config);
-        }
-        else if (is_mfe) {
-            calc_cepstral_mean_and_var_normalization_mfe(feature.matrix, impulse->dsp_blocks[0].config);
-        }
         result->timing.dsp_us += ei_read_timer_us() - dsp_start_us;
         result->timing.dsp = (int)(result->timing.dsp_us / 1000);
 
@@ -427,7 +436,7 @@ extern "C" EI_IMPULSE_ERROR process_impulse_continuous(const ei_impulse_t *impul
             ei_printf("Running impulse...\n");
         }
 
-        ei_impulse_error = run_inference(impulse, &feature, result, debug);
+        ei_impulse_error = run_inference(impulse, features, result, debug);
 
 #if EI_CLASSIFIER_CALIBRATION_ENABLED
         if (impulse->sensor == EI_CLASSIFIER_SENSOR_MICROPHONE) {
@@ -471,6 +480,7 @@ extern "C" EI_IMPULSE_ERROR process_impulse_continuous(const ei_impulse_t *impul
             }
         }
 #endif
+        delete[] matrix_ptrs;
     }
     else {
         for (int i = 0; i < impulse->label_count; i++) {

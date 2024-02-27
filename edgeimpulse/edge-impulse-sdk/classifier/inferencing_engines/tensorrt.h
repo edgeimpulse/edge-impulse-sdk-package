@@ -101,14 +101,13 @@ EI_IMPULSE_ERROR run_nn_inference(
 
     if (impulse->object_detection) {
         switch (impulse->object_detection_last_layer) {
+            case EI_CLASSIFIER_LAST_LAYER_TAO_SSD:
+            case EI_CLASSIFIER_LAST_LAYER_TAO_RETINANET:
+            case EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV3:
+            case EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV4:
             case EI_CLASSIFIER_LAST_LAYER_FOMO:
             case EI_CLASSIFIER_LAST_LAYER_YOLOV5: {
                 out_data_size = impulse->tflite_output_features_count;
-                break;
-            }
-            case EI_CLASSIFIER_LAST_LAYER_SSD: {
-                ei_printf("ERR: SSD models are not supported using TensorRT \n");
-                return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
                 break;
             }
             default: {
@@ -170,35 +169,48 @@ EI_IMPULSE_ERROR run_nn_inference(
 
     if (impulse->object_detection) {
         switch (impulse->object_detection_last_layer) {
-        case EI_CLASSIFIER_LAST_LAYER_FOMO: {
-            fill_res = fill_result_struct_f32_fomo(
-                impulse,
-                result,
-                out_data,
-                impulse->fomo_output_size,
-                impulse->fomo_output_size);
-            break;
-        }
-        case EI_CLASSIFIER_LAST_LAYER_SSD: {
-            ei_printf("ERR: SSD models are not supported using TensorRT \n");
-            return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
-            break;
-        }
-        case EI_CLASSIFIER_LAST_LAYER_YOLOV5: {
-            fill_res = fill_result_struct_f32_yolov5(
-                impulse,
-                result,
-                6,
-                out_data,
-                impulse->tflite_output_features_count);
-            break;
-        }
-        default: {
-            ei_printf(
-                "ERR: Unsupported object detection last layer (%d)\n",
-                impulse->object_detection_last_layer);
-            return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
-        }
+            case EI_CLASSIFIER_LAST_LAYER_FOMO: {
+                fill_res = fill_result_struct_f32_fomo(
+                    impulse,
+                    result,
+                    out_data,
+                    impulse->fomo_output_size,
+                    impulse->fomo_output_size);
+                break;
+            }
+            case EI_CLASSIFIER_LAST_LAYER_YOLOV5: {
+                fill_res = fill_result_struct_f32_yolov5(
+                    impulse,
+                    result,
+                    6,
+                    out_data,
+                    impulse->tflite_output_features_count);
+                break;
+            }
+            case EI_CLASSIFIER_LAST_LAYER_TAO_SSD:
+            case EI_CLASSIFIER_LAST_LAYER_TAO_RETINANET: {
+                fill_res = fill_result_struct_f32_tao_decode_detections(
+                    impulse,
+                    result,
+                    out_data,
+                    impulse->tflite_output_features_count);
+                break;
+            }
+            case EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV3:
+            case EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV4: {
+                fill_res = fill_result_struct_f32_tao_yolo(
+                    impulse,
+                    result,
+                    out_data,
+                    impulse->tflite_output_features_count);
+                break;
+            }
+            default: {
+                ei_printf(
+                    "ERR: Unsupported object detection last layer (%d)\n",
+                    impulse->object_detection_last_layer);
+                return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
+            }
         }
     }
     else {
@@ -215,7 +227,7 @@ EI_IMPULSE_ERROR run_nn_inference(
 }
 
 /**
- * Special function to run the classifier on images, only works on TFLite models (either interpreter or EON or for tensaiflow)
+ * Special function to run the classifier on images for quantized models
  * that allocates a lot less memory by quantizing in place. This only works if 'can_run_classifier_image_quantized'
  * returns EI_IMPULSE_OK.
  */
