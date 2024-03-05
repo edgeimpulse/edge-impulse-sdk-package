@@ -426,11 +426,10 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 }
                 break;
             }
-            case EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV3:
-            case EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV4: {
+            case EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV3: {
 
                 if (output->type == kTfLiteInt8) {
-                    fill_res = fill_result_struct_quantized_tao_yolo(
+                    fill_res = fill_result_struct_quantized_tao_yolov3(
                         impulse,
                         result,
                         output->data.int8,
@@ -439,7 +438,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                         impulse->tflite_output_features_count);
                 }
                 else if (output->type == kTfLiteUInt8) {
-                    fill_res = fill_result_struct_quantized_tao_yolo(
+                    fill_res = fill_result_struct_quantized_tao_yolov3(
                         impulse,
                         result,
                         output->data.uint8,
@@ -448,14 +447,47 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                         impulse->tflite_output_features_count);
                 }
                 else if (output->type == kTfLiteFloat32) {
-                    fill_res = fill_result_struct_f32_tao_yolo(
+                    fill_res = fill_result_struct_f32_tao_yolov3(
                         impulse,
                         result,
                         output->data.f,
                         impulse->tflite_output_features_count);
                 }
                 else {
-                    ei_printf("ERR: Invalid output type (%d) for TAO last layer\n", output->type);
+                    ei_printf("ERR: Invalid output type (%d) for TAO YOLOv3 layer\n", output->type);
+                    return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
+                }
+                break;
+            }
+            case EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV4: {
+
+                if (output->type == kTfLiteInt8) {
+                    fill_res = fill_result_struct_quantized_tao_yolov4(
+                        impulse,
+                        result,
+                        output->data.int8,
+                        output->params.zero_point,
+                        output->params.scale,
+                        impulse->tflite_output_features_count);
+                }
+                else if (output->type == kTfLiteUInt8) {
+                    fill_res = fill_result_struct_quantized_tao_yolov4(
+                        impulse,
+                        result,
+                        output->data.uint8,
+                        output->params.zero_point,
+                        output->params.scale,
+                        impulse->tflite_output_features_count);
+                }
+                else if (output->type == kTfLiteFloat32) {
+                    fill_res = fill_result_struct_f32_tao_yolov4(
+                        impulse,
+                        result,
+                        output->data.f,
+                        impulse->tflite_output_features_count);
+                }
+                else {
+                    ei_printf("ERR: Invalid output type (%d) for TAO YOLOv4 layer\n", output->type);
                     return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
                 }
                 break;

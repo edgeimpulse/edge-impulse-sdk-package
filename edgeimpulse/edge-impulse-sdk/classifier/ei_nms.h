@@ -203,7 +203,9 @@ static inline void NonMaxSuppression(const float* boxes, const int num_boxes,
 /**
  * Run non-max suppression over the results array (for bounding boxes)
  */
-EI_IMPULSE_ERROR ei_run_nms(std::vector<ei_impulse_result_bounding_box_t> *results) {
+EI_IMPULSE_ERROR ei_run_nms(
+    const ei_impulse_t *impulse,
+    std::vector<ei_impulse_result_bounding_box_t> *results) {
 
     size_t bb_count = 0;
     for (size_t ix = 0; ix < results->size(); ix++) {
@@ -257,8 +259,8 @@ EI_IMPULSE_ERROR ei_run_nms(std::vector<ei_impulse_result_bounding_box_t> *resul
         bb_count, // num_boxes
         (const float*)scores, // scores
         bb_count, // max_output_size
-        0.2f, // iou_threshold
-        0.0f, // score_threshold
+        impulse->object_detection_nms.iou_threshold, // iou_threshold
+        impulse->object_detection_nms.confidence_threshold, // score_threshold
         0.0f, // soft_nms_sigma
         selected_indices,
         selected_scores,
@@ -293,6 +295,22 @@ EI_IMPULSE_ERROR ei_run_nms(std::vector<ei_impulse_result_bounding_box_t> *resul
     ei_free(selected_scores);
 
     return EI_IMPULSE_OK;
+
+}
+
+/**
+ * Run non-max suppression over the results array (for bounding boxes)
+ */
+EI_IMPULSE_ERROR ei_run_nms(std::vector<ei_impulse_result_bounding_box_t> *results) {
+#if EI_CLASSIFIER_HAS_MODEL_VARIABLES == 1
+  const ei_impulse_t impulse = ei_default_impulse;
+#else
+  const ei_impulse_t impulse = {
+    .object_detection_nms.confidence_threshold = 0.0f,
+    .object_detection_nms.iou_threshold = 0.2f
+  };
+#endif
+  return ei_run_nms(&impulse, results);
 }
 
 #endif // #if (EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER == EI_CLASSIFIER_LAST_LAYER_YOLOV5) || (EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER == EI_CLASSIFIER_LAST_LAYER_YOLOV5_V5_DRPAI) || (EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER == EI_CLASSIFIER_LAST_LAYER_YOLOX) || (EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER == EI_CLASSIFIER_LAST_LAYER_TAO_RETINANET) || (EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER == EI_CLASSIFIER_LAST_LAYER_TAO_SSD) || (EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER == EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV3) || (EI_CLASSIFIER_OBJECT_DETECTION_LAST_LAYER == EI_CLASSIFIER_LAST_LAYER_TAO_YOLOV4)

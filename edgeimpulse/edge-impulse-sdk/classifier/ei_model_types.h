@@ -188,6 +188,11 @@ typedef struct {
     void* graph_config;
 } ei_learning_block_config_anomaly_gmm_t;
 
+typedef struct {
+    float confidence_threshold;
+    float iou_threshold;
+} ei_object_detection_nms_config_t;
+
 typedef struct ei_impulse {
     /* project details */
     uint32_t project_id;
@@ -234,6 +239,7 @@ typedef struct ei_impulse {
     uint16_t label_count;
     const ei_model_performance_calibration_t calibration;
     const char **categories;
+    ei_object_detection_nms_config_t object_detection_nms;
 } ei_impulse_t;
 
 typedef struct {

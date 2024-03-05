@@ -209,6 +209,7 @@ extern "C" EI_IMPULSE_ERROR process_impulse(const ei_impulse_t *impulse,
     // smart pointer to features array
     std::unique_ptr<ei_feature_t[]> features_ptr(new ei_feature_t[block_num]);
     ei_feature_t* features = features_ptr.get();
+    memset(features, 0, sizeof(ei_feature_t) * block_num);
 
     // have it outside of the loop to avoid going out of scope
     std::unique_ptr<ei::matrix_t> *matrix_ptrs = new std::unique_ptr<ei::matrix_t>[block_num];
@@ -400,6 +401,7 @@ extern "C" EI_IMPULSE_ERROR process_impulse_continuous(const ei_impulse_t *impul
         // smart pointer to features array
         std::unique_ptr<ei_feature_t[]> features_ptr(new ei_feature_t[block_num]);
         ei_feature_t* features = features_ptr.get();
+        memset(features, 0, sizeof(ei_feature_t) * block_num);
 
         // have it outside of the loop to avoid going out of scope
         std::unique_ptr<ei::matrix_t> *matrix_ptrs = new std::unique_ptr<ei::matrix_t>[block_num];
