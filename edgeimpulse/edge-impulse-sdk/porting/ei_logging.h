@@ -39,12 +39,8 @@
 #define EI_LOGD(format, ...) (void)0
 
 #ifndef EI_LOG_LEVEL
-    #define EI_LOG_LEVEL EI_LOG_LEVEL_NONE
+    #define EI_LOG_LEVEL EI_LOG_LEVEL_INFO
 #endif
-
-#if defined(__cplusplus) && EI_C_LINKAGE == 1
-extern "C"
-#endif // defined(__cplusplus) && EI_C_LINKAGE == 1
 
 __attribute__((unused)) static const char *debug_msgs[] =
 {

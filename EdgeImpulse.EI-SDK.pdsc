@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.46.6/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.47.0/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.46.6" tag="v1.46.6" date="2024-03-06" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.46.6/EdgeImpulse.EI-SDK.1.46.6.pack">
+		<release version="1.47.0" tag="v1.47.0" date="2024-03-08" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.47.0/EdgeImpulse.EI-SDK.1.47.0.pack">
       		EI-SDK
     	</release>	
+		<release version="1.46.6" tag="v1.46.6" date="2024-03-06" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.46.6/EdgeImpulse.EI-SDK.1.46.6.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.46.4" tag="v1.46.4" date="2024-03-05" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.46.4/EdgeImpulse.EI-SDK.1.46.4.pack">
       		EI-SDK
     	</release>
@@ -77,7 +80,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.46.6">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.47.0">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -535,11 +538,14 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/c/c_api_types.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/c/builtin_op_data.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/c/common.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/ei_flatten.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/ei_dsp_handle.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/numpy_types.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/ei_profiler.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/ei_utils.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/ei_alloc.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/ei_vector.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/returntypes.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/kissfft/_kiss_fft_guts.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/kissfft/kiss_fft.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/kissfft/kissfft.h"/>

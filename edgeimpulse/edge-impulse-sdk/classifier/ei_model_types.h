@@ -21,6 +21,7 @@
 #include <stdint.h>
 
 #include "edge-impulse-sdk/classifier/ei_classifier_types.h"
+#include "edge-impulse-sdk/dsp/ei_dsp_handle.h"
 #include "edge-impulse-sdk/dsp/numpy.hpp"
 #if EI_CLASSIFIER_USE_FULL_TFLITE || (EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_AKIDA) || (EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_MEMRYX)
 #include "tensorflow-lite/tensorflow/lite/c/common.h"
@@ -104,6 +105,9 @@ typedef struct {
     void *config;
     uint8_t *axes;
     size_t axes_size;
+    int version;  // future proof, can easily add to this struct now
+    DspHandle* (*factory)(void* config); // nullptr means no state
+    // v1 ends here
 } ei_model_dsp_t;
 
 typedef struct {
@@ -241,6 +245,70 @@ typedef struct ei_impulse {
     const char **categories;
     ei_object_detection_nms_config_t object_detection_nms;
 } ei_impulse_t;
+
+class ei_impulse_state_t {
+typedef DspHandle* _dsp_handle_ptr_t;
+public:
+    const ei_impulse_t *impulse; // keep a pointer to the impulse
+    _dsp_handle_ptr_t *dsp_handles;
+    bool is_temp_handle = false; // to know if we're using the old (stateless) API
+    ei_impulse_state_t(const ei_impulse_t *impulse)
+        : impulse(impulse)
+    {
+        const auto num_dsp_blocks = impulse->dsp_blocks_size;
+        dsp_handles = (_dsp_handle_ptr_t*)ei_malloc(sizeof(_dsp_handle_ptr_t)*num_dsp_blocks);
+        for(size_t ix = 0; ix < num_dsp_blocks; ix++) {
+            dsp_handles[ix] = nullptr;
+        }
+    }
+
+    DspHandle* get_dsp_handle(size_t ix) {
+        if (dsp_handles[ix] == nullptr) {
+            dsp_handles[ix] = impulse->dsp_blocks[ix].factory(impulse->dsp_blocks[ix].config);
+        }
+        return dsp_handles[ix];
+    }
+
+    void reset()
+    {
+        for (size_t ix = 0; ix < impulse->dsp_blocks_size; ix++) {
+            if (dsp_handles[ix] != nullptr) {
+                delete dsp_handles[ix];
+                dsp_handles[ix] = nullptr;
+            }
+        }
+    }
+
+    void* operator new(size_t size) {
+        return ei_malloc(size);
+    }
+
+    void operator delete(void* ptr) {
+        ei_free(ptr);
+    }
+
+    void* operator new[](size_t size) {
+        return ei_malloc(size);
+    }
+
+    void operator delete[](void* ptr) {
+        ei_free(ptr);
+    }
+
+    ~ei_impulse_state_t()
+    {
+        reset();
+        ei_free(dsp_handles);
+    }
+};
+
+class ei_impulse_handle_t {
+public:
+    ei_impulse_handle_t(const ei_impulse_t *impulse)
+        : state(impulse), impulse(impulse) {};
+    ei_impulse_state_t state;
+    const ei_impulse_t *impulse;
+};
 
 typedef struct {
     uint32_t block_id;

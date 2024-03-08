@@ -991,112 +991,106 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_tao_decode_de
     size_t row_count = output_features_count / col_size;
 
     for (size_t cls_idx = 1; cls_idx < (size_t)(impulse->label_count + 1); cls_idx++)  {
+
+        // create boxes, scores and labels structures for nms
+        matrix_t boxes(row_count, 4);
+        matrix_t scores(row_count, 1);
+        matrix_i32_t classes(row_count, 1);
+
         for (size_t ix = 0; ix < row_count; ix++) {
 
             float score = (static_cast<float>(data[ix * col_size + cls_idx]) - zero_point) * scale;
             score = clip_val(score, 0.0f, 1.0f);
 
-            if (score >= impulse->object_detection_threshold && score <= 1.0f) {
+            // # 1. calculate boxes location
+            size_t base_ix = ix * col_size + col_size; // references the end of the row
 
-                // # 1. calculate boxes location
-                size_t base_ix = ix * col_size + col_size; // references the end of the row
+            float r_12 = (static_cast<float>(data[base_ix - 12]) - zero_point) * scale;
+            float r_11 = (static_cast<float>(data[base_ix - 11]) - zero_point) * scale;
+            float r_10 = (static_cast<float>(data[base_ix - 10]) - zero_point) * scale;
+            float r_9  = (static_cast<float>(data[base_ix -  9]) - zero_point) * scale;
+            float r_8  = (static_cast<float>(data[base_ix -  8]) - zero_point) * scale;
+            float r_7  = (static_cast<float>(data[base_ix -  7]) - zero_point) * scale;
+            float r_6  = (static_cast<float>(data[base_ix -  6]) - zero_point) * scale;
+            float r_5  = (static_cast<float>(data[base_ix -  5]) - zero_point) * scale;
+            float r_4  = (static_cast<float>(data[base_ix -  4]) - zero_point) * scale;
+            float r_3  = (static_cast<float>(data[base_ix -  3]) - zero_point) * scale;
+            float r_2  = (static_cast<float>(data[base_ix -  2]) - zero_point) * scale;
+            float r_1  = (static_cast<float>(data[base_ix -  1]) - zero_point) * scale;
 
-                float r_12 = (static_cast<float>(data[base_ix - 12]) - zero_point) * scale;
-                float r_11 = (static_cast<float>(data[base_ix - 11]) - zero_point) * scale;
-                float r_10 = (static_cast<float>(data[base_ix - 10]) - zero_point) * scale;
-                float r_9  = (static_cast<float>(data[base_ix -  9]) - zero_point) * scale;
-                float r_8  = (static_cast<float>(data[base_ix -  8]) - zero_point) * scale;
-                float r_7  = (static_cast<float>(data[base_ix -  7]) - zero_point) * scale;
-                float r_6  = (static_cast<float>(data[base_ix -  6]) - zero_point) * scale;
-                float r_5  = (static_cast<float>(data[base_ix -  5]) - zero_point) * scale;
-                float r_4  = (static_cast<float>(data[base_ix -  4]) - zero_point) * scale;
-                float r_3  = (static_cast<float>(data[base_ix -  3]) - zero_point) * scale;
-                float r_2  = (static_cast<float>(data[base_ix -  2]) - zero_point) * scale;
-                float r_1  = (static_cast<float>(data[base_ix -  1]) - zero_point) * scale;
+            // cx_pred = y_pred[..., -12]
+            // cy_pred = y_pred[..., -11]
+            // w_pred = y_pred[..., -10]
+            // h_pred = y_pred[..., -9]
+            float cx_pred = r_12;
+            float cy_pred = r_11;
+            float w_pred  = r_10;
+            float h_pred  = r_9;
 
-                // cx_pred = y_pred[..., -12]
-                // cy_pred = y_pred[..., -11]
-                // w_pred = y_pred[..., -10]
-                // h_pred = y_pred[..., -9]
-                float cx_pred = r_12;
-                float cy_pred = r_11;
-                float w_pred  = r_10;
-                float h_pred  = r_9;
+            // w_anchor = y_pred[..., -6] - y_pred[..., -8]
+            // h_anchor = y_pred[..., -5] - y_pred[..., -7]
+            float w_anchor = r_6 - r_8;
+            float h_anchor = r_5 - r_7;
 
-                // w_anchor = y_pred[..., -6] - y_pred[..., -8]
-                // h_anchor = y_pred[..., -5] - y_pred[..., -7]
-                float w_anchor = r_6 - r_8;
-                float h_anchor = r_5 - r_7;
+            // cx_anchor = tf.truediv(y_pred[..., -6] + y_pred[..., -8], 2.0)
+            // cy_anchor = tf.truediv(y_pred[..., -5] + y_pred[..., -7], 2.0)
+            float cx_anchor = (r_6 + r_8) / 2.0f;
+            float cy_anchor = (r_5 + r_7) / 2.0f;
 
-                // cx_anchor = tf.truediv(y_pred[..., -6] + y_pred[..., -8], 2.0)
-                // cy_anchor = tf.truediv(y_pred[..., -5] + y_pred[..., -7], 2.0)
-                float cx_anchor = (r_6 + r_8) / 2.0f;
-                float cy_anchor = (r_5 + r_7) / 2.0f;
+            // cx_variance = y_pred[..., -4]
+            // cy_variance = y_pred[..., -3]
+            float cx_variance = r_4;
+            float cy_variance = r_3;
 
-                // cx_variance = y_pred[..., -4]
-                // cy_variance = y_pred[..., -3]
-                float cx_variance = r_4;
-                float cy_variance = r_3;
+            // variance_w = y_pred[..., -2]
+            // variance_h = y_pred[..., -1]
+            float variance_w = r_2;
+            float variance_h = r_1;
 
-                // variance_w = y_pred[..., -2]
-                // variance_h = y_pred[..., -1]
-                float variance_w = r_2;
-                float variance_h = r_1;
+            // # Convert anchor box offsets to image offsets.
+            // cx = cx_pred * cx_variance * w_anchor + cx_anchor
+            // cy = cy_pred * cy_variance * h_anchor + cy_anchor
+            // w = tf.exp(w_pred * variance_w) * w_anchor
+            // h = tf.exp(h_pred * variance_h) * h_anchor
+            float cx = cx_pred * cx_variance * w_anchor + cx_anchor;
+            float cy = cy_pred * cy_variance * h_anchor + cy_anchor;
+            float w = exp(w_pred * variance_w) * w_anchor;
+            float h = exp(h_pred * variance_h) * h_anchor;
 
-                // # Convert anchor box offsets to image offsets.
-                // cx = cx_pred * cx_variance * w_anchor + cx_anchor
-                // cy = cy_pred * cy_variance * h_anchor + cy_anchor
-                // w = tf.exp(w_pred * variance_w) * w_anchor
-                // h = tf.exp(h_pred * variance_h) * h_anchor
-                float cx = cx_pred * cx_variance * w_anchor + cx_anchor;
-                float cy = cy_pred * cy_variance * h_anchor + cy_anchor;
-                float w = exp(w_pred * variance_w) * w_anchor;
-                float h = exp(h_pred * variance_h) * h_anchor;
+            // # Convert 'centroids' to 'corners'.
+            float xmin = cx - (w / 2.0f);
+            float ymin = cy - (h / 2.0f);
+            float xmax = cx + (w / 2.0f);
+            float ymax = cy + (h / 2.0f);
 
-                // # Convert 'centroids' to 'corners'.
-                float xmin = cx - (w / 2.0f);
-                float ymin = cy - (h / 2.0f);
-                float xmax = cx + (w / 2.0f);
-                float ymax = cy + (h / 2.0f);
+            xmin *= impulse->input_width;
+            ymin *= impulse->input_height;
+            xmax *= impulse->input_width;
+            ymax *= impulse->input_height;
 
-                xmin = xmin * impulse->input_width;
-                ymin = ymin * impulse->input_height;
-                xmax = xmax * impulse->input_width;
-                ymax = ymax * impulse->input_height;
+            // note nms requires [ymin, xmin, ymax, xmax]
+            boxes.buffer[(ix * boxes.cols) + 0] = ymin;
+            boxes.buffer[(ix * boxes.cols) + 1] = xmin;
+            boxes.buffer[(ix * boxes.cols) + 2] = ymax;
+            boxes.buffer[(ix * boxes.cols) + 3] = xmax;
 
-                xmin = clip_val(xmin, 0.0f, (float)impulse->input_width);
-                ymin = clip_val(ymin, 0.0f, (float)impulse->input_height);
-                xmax = clip_val(xmax, 0.0f, (float)impulse->input_width);
-                ymax = clip_val(ymax, 0.0f, (float)impulse->input_height);
-
-                float w0 = xmax - xmin;
-                float h0 = ymax - ymin;
-
-                // will be round to 0
-                if (w0 <= 0 || h0 <= 0) {
-                    continue;
-                }
-
-                ei_impulse_result_bounding_box_t r;
-                // note indexing
-                r.label = ei_classifier_inferencing_categories[cls_idx - 1];
-
-                r.x = static_cast<uint32_t>(xmin);
-                r.y = static_cast<uint32_t>(ymin);
-                r.width = static_cast<uint32_t>(w0);
-                r.height = static_cast<uint32_t>(h0);
-                r.value = score;
-                dec_results.push_back(r);
-            }
+            classes.buffer[ix] = cls_idx-1;
+            scores.buffer[ix] = score;
         }
 
-        EI_IMPULSE_ERROR nms_res = ei_run_nms(impulse, &dec_results);
+        EI_IMPULSE_ERROR nms_res = ei_run_nms(impulse, &dec_results,
+                                              boxes.buffer, scores.buffer,
+                                              classes.buffer, row_count,
+                                              false /*clip_boxes*/);
         if (nms_res != EI_IMPULSE_OK) {
             return nms_res;
         }
 
         for (size_t j = 0; j < dec_results.size(); j++) {
-            results.push_back(dec_results[j]);
+            auto bb = dec_results[j];
+            if (bb.value >= impulse->object_detection_threshold) {
+                results.push_back(bb);
+            }
         }
 
         dec_results.clear();
@@ -1112,17 +1106,17 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_tao_decode_de
         }
     }
 
-    // keep topK
-    if (results.size() > 200) {
-        results.erase(results.begin() + 200, results.end());
-    }
-
-    // sort in reverse order
+    // we sort in reverse order accross all classes,
+    // since results for each class are pushed to the end.
     std::sort(results.begin(), results.end(), [ ]( const ei_impulse_result_bounding_box_t& lhs, const ei_impulse_result_bounding_box_t& rhs )
     {
         return lhs.value > rhs.value;
     });
 
+    // keep topK
+    if (results.size() > 200) {
+        results.erase(results.begin() + 200, results.end());
+    }
 
     result->bounding_boxes = results.data();
     result->bounding_boxes_count = results.size();
@@ -1177,7 +1171,9 @@ template<typename T>
 __attribute__((unused)) static void fill_result_struct_tao_yolov3_common(const ei_impulse_t *impulse,
                                                                          ei_impulse_result_t *result,
                                                                          T *data,
-                                                                         matrix_t *output,
+                                                                         matrix_t *boxes,
+                                                                         matrix_t *scores,
+                                                                         matrix_i32_t *classes,
                                                                          float zero_point,
                                                                          float scale,
                                                                          size_t output_features_count) {
@@ -1186,36 +1182,50 @@ __attribute__((unused)) static void fill_result_struct_tao_yolov3_common(const e
     size_t col_size = 11 + impulse->label_count;
     size_t row_count = output_features_count / col_size;
 
-    for (size_t ix = 0; ix < row_count; ix++) {
-
-        size_t data_ix = ix * col_size;
-        float r_0  = (static_cast<float>(data[data_ix +  0]) - zero_point) * scale;
-        float r_1  = (static_cast<float>(data[data_ix +  1]) - zero_point) * scale;
-        float r_2  = (static_cast<float>(data[data_ix +  2]) - zero_point) * scale;
-        float r_3  = (static_cast<float>(data[data_ix +  3]) - zero_point) * scale;
-        float r_4  = (static_cast<float>(data[data_ix +  4]) - zero_point) * scale;
-        float r_5  = (static_cast<float>(data[data_ix +  5]) - zero_point) * scale;
-        float r_6  = (static_cast<float>(data[data_ix +  6]) - zero_point) * scale;
-        float r_7  = (static_cast<float>(data[data_ix +  7]) - zero_point) * scale;
-        float r_8  = (static_cast<float>(data[data_ix +  8]) - zero_point) * scale;
-        float r_9  = (static_cast<float>(data[data_ix +  9]) - zero_point) * scale;
-        float r_10 = (static_cast<float>(data[data_ix + 10]) - zero_point) * scale;
-
-        float by = r_0 + sigmoid(r_6) * r_4;
-        float bx = r_1 + sigmoid(r_7) * r_5;
-        float bh = r_2 * exp(r_8);
-        float bw = r_3 * exp(r_9);
-
-        size_t box_ix = ix * output->cols;
-        output->buffer[box_ix + 0] = bx - 0.5 * bw; // xmin
-        output->buffer[box_ix + 1] = by - 0.5 * bh; // ymin
-        output->buffer[box_ix + 2] = bx + 0.5 * bw; // xmax
-        output->buffer[box_ix + 3] = by + 0.5 * bh; // ymax
-
-        // add class scores
-        for (size_t cls_idx = 0; cls_idx < impulse->label_count; cls_idx++) {
+    for (size_t cls_idx = 0; cls_idx < (size_t)impulse->label_count; cls_idx++)  {
+        for (size_t ix = 0; ix < row_count; ix++) {
+            size_t data_ix = ix * col_size;
+            float r_0  = (static_cast<float>(data[data_ix +  0]) - zero_point) * scale;
+            float r_1  = (static_cast<float>(data[data_ix +  1]) - zero_point) * scale;
+            float r_2  = (static_cast<float>(data[data_ix +  2]) - zero_point) * scale;
+            float r_3  = (static_cast<float>(data[data_ix +  3]) - zero_point) * scale;
+            float r_4  = (static_cast<float>(data[data_ix +  4]) - zero_point) * scale;
+            float r_5  = (static_cast<float>(data[data_ix +  5]) - zero_point) * scale;
+            float r_6  = (static_cast<float>(data[data_ix +  6]) - zero_point) * scale;
+            float r_7  = (static_cast<float>(data[data_ix +  7]) - zero_point) * scale;
+            float r_8  = (static_cast<float>(data[data_ix +  8]) - zero_point) * scale;
+            float r_9  = (static_cast<float>(data[data_ix +  9]) - zero_point) * scale;
+            float r_10 = (static_cast<float>(data[data_ix + 10]) - zero_point) * scale;
             float cls = (static_cast<float>(data[data_ix + 11 + cls_idx]) - zero_point) * scale;
-            output->buffer[box_ix + 4 + cls_idx] = sigmoid(cls) * sigmoid(r_10);
+
+            float by = r_0 + sigmoid(r_6) * r_4;
+            float bx = r_1 + sigmoid(r_7) * r_5;
+            float bh = r_2 * exp(r_8);
+            float bw = r_3 * exp(r_9);
+
+            size_t box_ix = boxes->cols * ((cls_idx * row_count) + ix);
+            size_t class_ix = classes->cols * ((cls_idx * row_count) + ix);
+            size_t score_ix = scores->cols * ((cls_idx * row_count) + ix);
+
+            float ymin = by - 0.5 * bh;
+            float xmin = bx - 0.5 * bw;
+            float ymax = by + 0.5 * bh;
+            float xmax = bx + 0.5 * bw;
+
+            // from relative to absolute
+            ymin *= impulse->input_height;
+            xmin *= impulse->input_width;
+            ymax *= impulse->input_height;
+            xmax *= impulse->input_width;
+
+            // [ymin, xmin, ymax, xmax]
+            boxes->buffer[box_ix + 0] = ymin;
+            boxes->buffer[box_ix + 1] = xmin;
+            boxes->buffer[box_ix + 2] = ymax;
+            boxes->buffer[box_ix + 3] = xmax;
+
+            classes->buffer[class_ix] = cls_idx;
+            scores->buffer[score_ix] = sigmoid(cls) * sigmoid(r_10);
         }
     }
 }
@@ -1229,7 +1239,9 @@ template<typename T>
 __attribute__((unused)) static void fill_result_struct_tao_yolov4_common(const ei_impulse_t *impulse,
                                                                          ei_impulse_result_t *result,
                                                                          T *data,
-                                                                         matrix_t *output,
+                                                                         matrix_t *boxes,
+                                                                         matrix_t *scores,
+                                                                         matrix_i32_t *classes,
                                                                          float zero_point,
                                                                          float scale,
                                                                          size_t output_features_count) {
@@ -1239,44 +1251,61 @@ __attribute__((unused)) static void fill_result_struct_tao_yolov4_common(const e
     size_t row_count = output_features_count / col_size;
     const float grid_scale_xy = 1.0f;
 
-    for (size_t ix = 0; ix < row_count; ix++) {
+    for (size_t cls_idx = 0; cls_idx < (size_t)impulse->label_count; cls_idx++)  {
+        for (size_t ix = 0; ix < row_count; ix++) {
 
-        float r_0  = (static_cast<float>(data[ix * col_size +  0]) - zero_point) * scale;
-        float r_1  = (static_cast<float>(data[ix * col_size +  1]) - zero_point) * scale;
-        float r_2  = (static_cast<float>(data[ix * col_size +  2]) - zero_point) * scale;
-        float r_3  = (static_cast<float>(data[ix * col_size +  3]) - zero_point) * scale;
-        float r_4  = (static_cast<float>(data[ix * col_size +  4]) - zero_point) * scale;
-        float r_5  = (static_cast<float>(data[ix * col_size +  5]) - zero_point) * scale;
-        float r_6  = (static_cast<float>(data[ix * col_size +  6]) - zero_point) * scale;
-        float r_7  = (static_cast<float>(data[ix * col_size +  7]) - zero_point) * scale;
-        float r_8  = (static_cast<float>(data[ix * col_size +  8]) - zero_point) * scale;
-        float r_9  = (static_cast<float>(data[ix * col_size +  9]) - zero_point) * scale;
-        float r_10 = (static_cast<float>(data[ix * col_size + 10]) - zero_point) * scale;
+            float r_0  = (static_cast<float>(data[ix * col_size +  0]) - zero_point) * scale;
+            float r_1  = (static_cast<float>(data[ix * col_size +  1]) - zero_point) * scale;
+            float r_2  = (static_cast<float>(data[ix * col_size +  2]) - zero_point) * scale;
+            float r_3  = (static_cast<float>(data[ix * col_size +  3]) - zero_point) * scale;
+            float r_4  = (static_cast<float>(data[ix * col_size +  4]) - zero_point) * scale;
+            float r_5  = (static_cast<float>(data[ix * col_size +  5]) - zero_point) * scale;
+            float r_6  = (static_cast<float>(data[ix * col_size +  6]) - zero_point) * scale;
+            float r_7  = (static_cast<float>(data[ix * col_size +  7]) - zero_point) * scale;
+            float r_8  = (static_cast<float>(data[ix * col_size +  8]) - zero_point) * scale;
+            float r_9  = (static_cast<float>(data[ix * col_size +  9]) - zero_point) * scale;
+            float r_10 = (static_cast<float>(data[ix * col_size + 10]) - zero_point) * scale;
 
-        float pred_y = sigmoid(r_6) * grid_scale_xy - (grid_scale_xy - 1.0f) / 2.0f;
-        float pred_x = sigmoid(r_7) * grid_scale_xy - (grid_scale_xy - 1.0f) / 2.0f;
-        float pred_h = exp(std::min(r_8, 8.0f));
-        float pred_w = exp(std::min(r_9, 8.0f));
+            float pred_y = sigmoid(r_6) * grid_scale_xy - (grid_scale_xy - 1.0f) / 2.0f;
+            float pred_x = sigmoid(r_7) * grid_scale_xy - (grid_scale_xy - 1.0f) / 2.0f;
+            float pred_h = exp(std::min(r_8, 8.0f));
+            float pred_w = exp(std::min(r_9, 8.0f));
 
-        r_6 = pred_y;
-        r_7 = pred_x;
-        r_8 = pred_h;
-        r_9 = pred_w;
+            r_6 = pred_y;
+            r_7 = pred_x;
+            r_8 = pred_h;
+            r_9 = pred_w;
 
-        float by = r_0 + r_6 * r_4;
-        float bx = r_1 + r_7 * r_5;
-        float bh = r_2 * r_8;
-        float bw = r_3 * r_9;
+            float by = r_0 + r_6 * r_4;
+            float bx = r_1 + r_7 * r_5;
+            float bh = r_2 * r_8;
+            float bw = r_3 * r_9;
 
-        output->buffer[ix * output->cols + 0] = bx - 0.5 * bw; // xmin
-        output->buffer[ix * output->cols + 1] = by - 0.5 * bh; // ymin
-        output->buffer[ix * output->cols + 2] = bx + 0.5 * bw; // xmax
-        output->buffer[ix * output->cols + 3] = by + 0.5 * bh; // ymax
+            size_t box_ix = boxes->cols * ((cls_idx * row_count) + ix);
+            size_t class_ix = classes->cols * ((cls_idx * row_count) + ix);
+            size_t score_ix = scores->cols * ((cls_idx * row_count) + ix);
 
-        // add class scores
-        for (size_t cls_idx = 0; cls_idx < impulse->label_count; cls_idx++) {
+            float ymin = by - 0.5 * bh;
+            float xmin = bx - 0.5 * bw;
+            float ymax = by + 0.5 * bh;
+            float xmax = bx + 0.5 * bw;
+
+            // from relative to absolute
+            ymin *= impulse->input_height;
+            xmin *= impulse->input_width;
+            ymax *= impulse->input_height;
+            xmax *= impulse->input_width;
+
+            // [ymin, xmin, ymax, xmax]
+            boxes->buffer[box_ix + 0] = ymin;
+            boxes->buffer[box_ix + 1] = xmin;
+            boxes->buffer[box_ix + 2] = ymax;
+            boxes->buffer[box_ix + 3] = xmax;
+
+            classes->buffer[class_ix] = cls_idx;
+
             float cls = (static_cast<float>(data[ix * col_size + 11 + cls_idx]) - zero_point) * scale;
-            output->buffer[ix * output->cols + 4 + cls_idx] = sigmoid(cls) * sigmoid(r_10);
+            scores->buffer[score_ix] = sigmoid(cls) * sigmoid(r_10);
         }
     }
 }
@@ -1286,72 +1315,37 @@ __attribute__((unused)) static void fill_result_struct_tao_yolov4_common(const e
 /**
  * Fill the result structure from an output tensor
 */
-template<typename T>
 __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_tao_yolo_common(const ei_impulse_t *impulse,
                                                                                    ei_impulse_result_t *result,
-                                                                                   T *data,
-                                                                                   float zero_point,
-                                                                                   float scale,
-                                                                                   size_t output_features_count) {
+                                                                                   matrix_t *inp_boxes,
+                                                                                   matrix_t *inp_scores,
+                                                                                   matrix_i32_t *inp_classes,
+                                                                                   size_t nboxes) {
     static std::vector<ei_impulse_result_bounding_box_t> results;
     static std::vector<ei_impulse_result_bounding_box_t> dec_results;
     results.clear();
     dec_results.clear();
 
-    // # x: 3-D tensor. Last dimension is (x_min, y_min, x_max, y_max, cls_confidence[0, 1, ...])
-    size_t col_size = 4 + impulse->label_count;
-    size_t row_count = output_features_count / col_size;
-
     for (size_t cls_idx = 0; cls_idx < impulse->label_count; cls_idx++)  {
-        for (size_t ix = 0; ix < row_count; ix++) {
 
-            size_t base_ix = ix * col_size;
-            float score = static_cast<float>(data[base_ix + 4 + cls_idx] - zero_point) * scale;
-            score = clip_val(score, 0.0f, 1.0f);
+        // create boxes, scores and labels structures for nms
+        matrix_t boxes(nboxes, 4, inp_boxes->buffer + (cls_idx * nboxes * 4));
+        matrix_t scores(nboxes, 1, inp_scores->buffer + (cls_idx * nboxes * 1));
+        matrix_i32_t classes(nboxes, 1, inp_classes->buffer + (cls_idx * nboxes * 1));
 
-            if (score >= impulse->object_detection_threshold && score <= 1.0f) {
-
-                float xmin = static_cast<float>(data[base_ix + 0] - zero_point) * scale;
-                float ymin = static_cast<float>(data[base_ix + 1] - zero_point) * scale;
-                float xmax = static_cast<float>(data[base_ix + 2] - zero_point) * scale;
-                float ymax = static_cast<float>(data[base_ix + 3] - zero_point) * scale;
-
-                xmin = xmin * impulse->input_width;
-                ymin = ymin * impulse->input_height;
-                xmax = xmax * impulse->input_width;
-                ymax = ymax * impulse->input_height;
-
-                xmin = clip_val(xmin, 0.0f, (float)impulse->input_width);
-                ymin = clip_val(ymin, 0.0f, (float)impulse->input_height);
-                xmax = clip_val(xmax, 0.0f, (float)impulse->input_width);
-                ymax = clip_val(ymax, 0.0f, (float)impulse->input_height);
-
-                float w0 = xmax - xmin;
-                float h0 = ymax - ymin;
-
-                if (w0 <= 0 || h0 <= 0) {
-                    continue;
-                }
-
-                ei_impulse_result_bounding_box_t r;
-                r.label = ei_classifier_inferencing_categories[cls_idx];
-
-                r.x = static_cast<uint32_t>(xmin);
-                r.y = static_cast<uint32_t>(ymin);
-                r.width = static_cast<uint32_t>(w0);
-                r.height = static_cast<uint32_t>(h0);
-                r.value = score;
-                dec_results.push_back(r);
-            }
-        }
-
-        EI_IMPULSE_ERROR nms_res = ei_run_nms(impulse, &dec_results);
+        EI_IMPULSE_ERROR nms_res = ei_run_nms(impulse, &dec_results,
+                                              boxes.buffer, scores.buffer,
+                                              classes.buffer, nboxes,
+                                              true /*clip_boxes*/);
         if (nms_res != EI_IMPULSE_OK) {
             return nms_res;
         }
 
         for (size_t j = 0; j < dec_results.size(); j++) {
-            results.push_back(dec_results[j]);
+            auto bb = dec_results[j];
+            if (bb.value >= impulse->object_detection_threshold) {
+                results.push_back(bb);
+            }
         }
 
         dec_results.clear();
@@ -1367,17 +1361,17 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_tao_yolo_comm
         }
     }
 
-    // keep topK
-    if (results.size() > 200) {
-        results.erase(results.begin() + 200, results.end());
-    }
-
-    // sort in reverse order
+    // we sort in reverse order accross all classes,
+    // since results for each class are pushed to the end.
     std::sort(results.begin(), results.end(), [ ]( const ei_impulse_result_bounding_box_t& lhs, const ei_impulse_result_bounding_box_t& rhs )
     {
         return lhs.value > rhs.value;
     });
 
+    // keep topK
+    if (results.size() > 200) {
+        results.erase(results.begin() + 200, results.end());
+    }
 
     result->bounding_boxes = results.data();
     result->bounding_boxes_count = results.size();
@@ -1396,11 +1390,14 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_tao_yolov
 #ifdef EI_HAS_TAO_YOLOV3
 
     size_t col_size = 11 + impulse->label_count;
-    size_t row_count = output_features_count / col_size;
+    size_t nboxes = output_features_count / col_size;
 
-    matrix_t boxes(row_count, 4 + impulse->label_count);
-    fill_result_struct_tao_yolov3_common(impulse, result, data, &boxes, 0.0f, 1.0f, output_features_count);
-    return fill_result_struct_tao_yolo_common(impulse, result, boxes.buffer, 0.0f, 1.0f, boxes.rows * boxes.cols);
+    // (classes, nboxes, ...)
+    matrix_t boxes_y(nboxes * impulse->label_count, 4);
+    matrix_t scores(nboxes * impulse->label_count, 1);
+    matrix_i32_t classes(nboxes * impulse->label_count, 1);
+    fill_result_struct_tao_yolov3_common(impulse, result, data, &boxes_y, &scores, &classes, 0.0f, 1.0f, output_features_count);
+    return fill_result_struct_tao_yolo_common(impulse, result, &boxes_y, &scores, &classes, nboxes);
 #else
     return EI_IMPULSE_LAST_LAYER_NOT_AVAILABLE;
 #endif // #ifdef EI_HAS_TAO_YOLOV3
@@ -1417,12 +1414,16 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_quantized_tao
                                                                                       float scale,
                                                                                       size_t output_features_count) {
 #ifdef EI_HAS_TAO_YOLOV3
-    size_t col_size = 11 + impulse->label_count;
-    size_t row_count = output_features_count / col_size;
 
-    matrix_t boxes(row_count, 4 + impulse->label_count);
-    fill_result_struct_tao_yolov3_common(impulse, result, data, &boxes, zero_point, scale, output_features_count);
-    return fill_result_struct_tao_yolo_common(impulse, result, boxes.buffer, 0.0f, 1.0f, boxes.rows * boxes.cols);
+    size_t col_size = 11 + impulse->label_count;
+    size_t nboxes = output_features_count / col_size;
+
+    // (classes, nboxes, ...)
+    matrix_t boxes_y(nboxes * impulse->label_count, 4);
+    matrix_t scores(nboxes * impulse->label_count, 1);
+    matrix_i32_t classes(nboxes * impulse->label_count, 1);
+    fill_result_struct_tao_yolov3_common(impulse, result, data, &boxes_y, &scores, &classes, zero_point, scale, output_features_count);
+    return fill_result_struct_tao_yolo_common(impulse, result, &boxes_y, &scores, &classes, nboxes);
 #else
     return EI_IMPULSE_LAST_LAYER_NOT_AVAILABLE;
 #endif // #ifdef EI_HAS_TAO_YOLOV3
@@ -1436,13 +1437,15 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_tao_yolov
                                                                                 float *data,
                                                                                 size_t output_features_count) {
 #ifdef EI_HAS_TAO_YOLOV4
-
     size_t col_size = 11 + impulse->label_count;
-    size_t row_count = output_features_count / col_size;
+    size_t nboxes = output_features_count / col_size;
 
-    matrix_t boxes(row_count, 4 + impulse->label_count);
-    fill_result_struct_tao_yolov4_common(impulse, result, data, &boxes, 0.0f, 1.0f, output_features_count);
-    return fill_result_struct_tao_yolo_common(impulse, result, boxes.buffer, 0.0f, 1.0f, boxes.rows * boxes.cols);
+    // (classes, nboxes, ...)
+    matrix_t boxes_y(nboxes * impulse->label_count, 4);
+    matrix_t scores(nboxes * impulse->label_count, 1);
+    matrix_i32_t classes(nboxes * impulse->label_count, 1);
+    fill_result_struct_tao_yolov4_common(impulse, result, data, &boxes_y, &scores, &classes, 0.0f, 1.0f, output_features_count);
+    return fill_result_struct_tao_yolo_common(impulse, result, &boxes_y, &scores, &classes, nboxes);
 #else
     return EI_IMPULSE_LAST_LAYER_NOT_AVAILABLE;
 #endif // #ifdef EI_HAS_TAO_YOLOV4
@@ -1459,12 +1462,16 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_quantized_tao
                                                                                       float scale,
                                                                                       size_t output_features_count) {
 #ifdef EI_HAS_TAO_YOLOV4
-    size_t col_size = 11 + impulse->label_count;
-    size_t row_count = output_features_count / col_size;
 
-    matrix_t boxes(row_count, 4 + impulse->label_count);
-    fill_result_struct_tao_yolov4_common(impulse, result, data, &boxes, zero_point, scale, output_features_count);
-    return fill_result_struct_tao_yolo_common(impulse, result, boxes.buffer, 0.0f, 1.0f, boxes.rows * boxes.cols);
+    size_t col_size = 11 + impulse->label_count;
+    size_t nboxes = output_features_count / col_size;
+
+    // (classes, nboxes, ...)
+    matrix_t boxes_y(nboxes * impulse->label_count, 4);
+    matrix_t scores(nboxes * impulse->label_count, 1);
+    matrix_i32_t classes(nboxes * impulse->label_count, 1);
+    fill_result_struct_tao_yolov4_common(impulse, result, data, &boxes_y, &scores, &classes, zero_point, scale, output_features_count);
+    return fill_result_struct_tao_yolo_common(impulse, result, &boxes_y, &scores, &classes, nboxes);
 #else
     return EI_IMPULSE_LAST_LAYER_NOT_AVAILABLE;
 #endif // #ifdef EI_HAS_TAO_YOLOV4
@@ -1474,7 +1481,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_quantized_tao
 #if EI_CLASSIFIER_SINGLE_FEATURE_INPUT == 0
 bool find_mtx_by_idx(ei_feature_t* mtx, ei::matrix_t** matrix, uint32_t mtx_id, size_t mtx_size) {
     for (size_t i = 0; i < mtx_size; i++) {
-        if (&mtx[i] == NULL) {
+        if (mtx[i].matrix == NULL) {
             continue;
         }
         if (mtx[i].blockId == mtx_id || mtx[i].blockId == 0) {
