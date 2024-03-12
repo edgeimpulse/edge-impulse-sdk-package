@@ -208,7 +208,7 @@ TfLiteStatus InitializeTfLiteTensorFromFlatbuffer(
 
   result->data.data = GetFlatbufferTensorBuffer(flatbuffer_tensor, buffers);
   // this is useful for debugging
-#if EI_LOG_LEVEL && EI_LOG_LEVEL >= 4
+#if defined(EI_LOG_LEVEL) && (EI_LOG_LEVEL >= 4)
   result->name = flatbuffer_tensor.name()->c_str();
 #endif
   // TODO(petewarden): Some of these paths aren't getting enough testing
