@@ -353,7 +353,7 @@ EI_IMPULSE_ERROR run_nn_inference(
     std::vector<float> potentials_v;// = potentials.cast<std::vector<float>>();
 
     // TODO: output conversion depending on output shape?
-    if (impulse->object_detection == false) {
+    if (block_config->object_detection == false) {
         potentials_v = potentials.squeeze().cast<std::vector<float>>();
     }
     else {
@@ -396,11 +396,12 @@ EI_IMPULSE_ERROR run_nn_inference(
     engine_info << "Power consumption: " << std::fixed << std::setprecision(2) << active_power << " mW\n";
     engine_info << "Inferences per second: " << (1000000 / result->timing.classification_us);
 
-    if (impulse->object_detection) {
-        switch (impulse->object_detection_last_layer) {
+    if (block_config->object_detection) {
+        switch (block_config->object_detection_last_layer) {
             case EI_CLASSIFIER_LAST_LAYER_FOMO: {
                 fill_res = fill_result_struct_f32_fomo(
                     impulse,
+                    block_config,
                     result,
                     potentials_v.data(),
                     impulse->fomo_output_size,
@@ -409,17 +410,17 @@ EI_IMPULSE_ERROR run_nn_inference(
             }
             case EI_CLASSIFIER_LAST_LAYER_SSD: {
                 ei_printf("ERR: MobileNet SSD models are not implemented for Akida (%d)\n",
-                    impulse->object_detection_last_layer);
+                    block_config->object_detection_last_layer);
                 return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
             }
             case EI_CLASSIFIER_LAST_LAYER_YOLOV5: {
                 ei_printf("ERR: YOLO v5 models are not implemented for Akida (%d)\n",
-                    impulse->object_detection_last_layer);
+                    block_config->object_detection_last_layer);
                 return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
             }
             default: {
                 ei_printf("ERR: Unsupported object detection last layer (%d)\n",
-                    impulse->object_detection_last_layer);
+                    block_config->object_detection_last_layer);
                 return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
             }
         }
@@ -547,6 +548,9 @@ __attribute__((unused)) int extract_tflite_features(signal_t *signal, matrix_t *
         .output_data_tensor = 0,
         .output_labels_tensor = 255,
         .output_score_tensor = 255,
+        .threshold = 0,
+        .quantized = 0,
+        .compiled = 1,
         .graph_config = &ei_config_tflite_graph_0
     };
 

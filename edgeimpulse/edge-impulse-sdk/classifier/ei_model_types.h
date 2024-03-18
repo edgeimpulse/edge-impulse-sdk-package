@@ -164,6 +164,8 @@ typedef struct {
     uint8_t output_data_tensor;
     uint8_t output_labels_tensor;
     uint8_t output_score_tensor;
+    /* object detection and visual AD */
+    float threshold;
     /* tflite graph params */
     bool quantized;
     bool compiled;
@@ -218,10 +220,7 @@ typedef struct ei_impulse {
     ei_model_dsp_t *dsp_blocks;
 
     /* object detection */
-    bool object_detection;
     uint16_t object_detection_count;
-    float object_detection_threshold;
-    int8_t object_detection_last_layer;
     uint32_t fomo_output_size;
     uint32_t tflite_output_features_count;
 

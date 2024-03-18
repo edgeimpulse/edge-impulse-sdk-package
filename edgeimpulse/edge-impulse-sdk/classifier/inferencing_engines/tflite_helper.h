@@ -291,12 +291,24 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
             case EI_CLASSIFIER_LAST_LAYER_FOMO: {
                 bool int8_output = output->type == TfLiteType::kTfLiteInt8;
                 if (int8_output) {
-                    fill_res = fill_result_struct_i8_fomo(impulse, result, output->data.int8, output->params.zero_point, output->params.scale,
-                        impulse->fomo_output_size, impulse->fomo_output_size);
+                    fill_res = fill_result_struct_i8_fomo(
+                        impulse,
+                        block_config,
+                        result,
+                        output->data.int8,
+                        output->params.zero_point,
+                        output->params.scale,
+                        impulse->fomo_output_size,
+                        impulse->fomo_output_size);
                 }
                 else {
-                    fill_res = fill_result_struct_f32_fomo(impulse, result, output->data.f,
-                        impulse->fomo_output_size, impulse->fomo_output_size);
+                    fill_res = fill_result_struct_f32_fomo(
+                        impulse,
+                        block_config,
+                        result,
+                        output->data.f,
+                        impulse->fomo_output_size,
+                        impulse->fomo_output_size);
                 }
                 break;
             }
@@ -309,7 +321,14 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                     return EI_IMPULSE_LABEL_TENSOR_WAS_NULL;
                 }
                 if (output->type == kTfLiteFloat32) {
-                    fill_res = fill_result_struct_f32_object_detection(impulse, result, output->data.f, scores_tensor->data.f, labels_tensor->data.f, debug);
+                    fill_res = fill_result_struct_f32_object_detection(
+                        impulse,
+                        block_config,
+                        result,
+                        output->data.f,
+                        scores_tensor->data.f,
+                        labels_tensor->data.f,
+                        debug);
                 }
                 else {
                     ei_printf("ERR: MobileNet SSD does not support quantized inference\n");
@@ -325,12 +344,13 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
 #endif // EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TFLITE_FULL
             case EI_CLASSIFIER_LAST_LAYER_YOLOV5:
             case EI_CLASSIFIER_LAST_LAYER_YOLOV5_V5_DRPAI: {
-                int version = impulse->object_detection_last_layer == EI_CLASSIFIER_LAST_LAYER_YOLOV5_V5_DRPAI ?
+                int version = block_config->object_detection_last_layer == EI_CLASSIFIER_LAST_LAYER_YOLOV5_V5_DRPAI ?
                     5 : 6;
 
                 if (output->type == kTfLiteInt8) {
                     fill_res = fill_result_struct_quantized_yolov5(
                         impulse,
+                        block_config,
                         result,
                         version,
                         output->data.int8,
@@ -342,6 +362,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 else if (output->type == kTfLiteUInt8) {
                     fill_res = fill_result_struct_quantized_yolov5(
                         impulse,
+                        block_config,
                         result,
                         version,
                         output->data.uint8,
@@ -353,6 +374,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 else if (output->type == kTfLiteFloat32) {
                     fill_res = fill_result_struct_f32_yolov5(
                         impulse,
+                        block_config,
                         result,
                         version,
                         output->data.f,
@@ -372,6 +394,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 #else
                     fill_res = fill_result_struct_f32_yolox(
                         impulse,
+                        block_config,
                         result,
                         output->data.f,
                         impulse->tflite_output_features_count,
@@ -390,6 +413,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                     }
                     fill_res = fill_result_struct_f32_yolov7(
                         impulse,
+                        block_config,
                         result,
                         output->data.f,
                         output_feature_count);
@@ -402,6 +426,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 if (output->type == kTfLiteInt8) {
                     fill_res = fill_result_struct_quantized_tao_decode_detections(
                         impulse,
+                        block_config,
                         result,
                         output->data.int8,
                         output->params.zero_point,
@@ -412,6 +437,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 else if (output->type == kTfLiteUInt8) {
                     fill_res = fill_result_struct_quantized_tao_decode_detections(
                         impulse,
+                        block_config,
                         result,
                         output->data.uint8,
                         output->params.zero_point,
@@ -422,6 +448,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 else if (output->type == kTfLiteFloat32) {
                     fill_res = fill_result_struct_f32_tao_decode_detections(
                         impulse,
+                        block_config,
                         result,
                         output->data.f,
                         impulse->tflite_output_features_count,
@@ -438,6 +465,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 if (output->type == kTfLiteInt8) {
                     fill_res = fill_result_struct_quantized_tao_yolov3(
                         impulse,
+                        block_config,
                         result,
                         output->data.int8,
                         output->params.zero_point,
@@ -448,6 +476,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 else if (output->type == kTfLiteUInt8) {
                     fill_res = fill_result_struct_quantized_tao_yolov3(
                         impulse,
+                        block_config,
                         result,
                         output->data.uint8,
                         output->params.zero_point,
@@ -458,6 +487,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 else if (output->type == kTfLiteFloat32) {
                     fill_res = fill_result_struct_f32_tao_yolov3(
                         impulse,
+                        block_config,
                         result,
                         output->data.f,
                         impulse->tflite_output_features_count,
@@ -474,6 +504,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 if (output->type == kTfLiteInt8) {
                     fill_res = fill_result_struct_quantized_tao_yolov4(
                         impulse,
+                        block_config,
                         result,
                         output->data.int8,
                         output->params.zero_point,
@@ -484,6 +515,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 else if (output->type == kTfLiteUInt8) {
                     fill_res = fill_result_struct_quantized_tao_yolov4(
                         impulse,
+                        block_config,
                         result,
                         output->data.uint8,
                         output->params.zero_point,
@@ -494,6 +526,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
                 else if (output->type == kTfLiteFloat32) {
                     fill_res = fill_result_struct_f32_tao_yolov4(
                         impulse,
+                        block_config,
                         result,
                         output->data.f,
                         impulse->tflite_output_features_count,
@@ -507,7 +540,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
             }
             default: {
                 ei_printf("ERR: Unsupported object detection last layer (%d)\n",
-                    impulse->object_detection_last_layer);
+                    block_config->object_detection_last_layer);
                 return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
             }
         }
@@ -515,7 +548,7 @@ EI_IMPULSE_ERROR fill_result_struct_from_output_tensor_tflite(
     else if (block_config->classification_mode == EI_CLASSIFIER_CLASSIFICATION_MODE_VISUAL_ANOMALY)
     {
         if (!result->copy_output) {
-            fill_res = fill_result_visual_ad_struct_f32(impulse, result, output->data.f, debug);
+            fill_res = fill_result_visual_ad_struct_f32(impulse, result, output->data.f, block_config->threshold, debug);
         }
     }
     // if we copy the output, we don't need to process it as classification

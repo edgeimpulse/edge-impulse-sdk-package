@@ -60,7 +60,7 @@ EI_IMPULSE_ERROR run_nn_inference(
     void *config_ptr,
     bool debug)
 {
-    ei_learning_block_config_tflite_graph_t *config = (ei_learning_block_config_tflite_graph_t*)config_ptr;
+    ei_learning_block_config_tflite_graph_t *block_config = (ei_learning_block_config_tflite_graph_t*)config_ptr;
 
     static std::unique_ptr<tflite::FlatBufferModel> model = nullptr;
     static std::unique_ptr<tflite::Interpreter> interpreter = nullptr;
@@ -160,8 +160,8 @@ EI_IMPULSE_ERROR run_nn_inference(
     size_t mtx_size = impulse->dsp_blocks_size + impulse->learning_blocks_size;
 
     for (size_t i = 0; i < input_block_ids_size; i++) {
-        uint16_t cur_mtx = input_block_ids[i];
 #if EI_CLASSIFIER_SINGLE_FEATURE_INPUT == 0
+        uint16_t cur_mtx = input_block_ids[i];
         ei::matrix_t* matrix = NULL;
 
         if (!find_mtx_by_idx(fmatrix, &matrix, cur_mtx, mtx_size)) {
@@ -173,7 +173,7 @@ EI_IMPULSE_ERROR run_nn_inference(
 #endif
 
         for (uint32_t ix = 0; ix < matrix->rows * matrix->cols; ix++) {
-            if (impulse->object_detection) {
+            if (block_config->object_detection) {
 #if EI_CLASSIFIER_QUANTIZATION_ENABLED == 1
                 float pixel = (float)matrix->buffer[ix];
                 input[ix] = static_cast<uint8_t>((pixel / input->tflite_input_scale) + input->tflite_input_zeropoint);
@@ -201,9 +201,9 @@ EI_IMPULSE_ERROR run_nn_inference(
     result->timing.classification = (int)(result->timing.classification_us / 1000);
 
 #if EI_CLASSIFIER_TFLITE_OUTPUT_QUANTIZED == 1
-    int8_t* out_data = interpreter->typed_output_tensor<int8_t>(config->output_data_tensor);
+    int8_t* out_data = interpreter->typed_output_tensor<int8_t>(block_config->output_data_tensor);
 #else
-    float* out_data = interpreter->typed_output_tensor<float>(config->output_data_tensor);
+    float* out_data = interpreter->typed_output_tensor<float>(block_config->output_data_tensor);
 #endif
 
     if (debug) {
@@ -246,21 +246,33 @@ EI_IMPULSE_ERROR run_nn_inference(
 
     EI_IMPULSE_ERROR fill_res = EI_IMPULSE_OK;
 
-    if (impulse->object_detection) {
-        switch (impulse->object_detection_last_layer) {
+    if (block_config->object_detection) {
+        switch (block_config->object_detection_last_layer) {
             case EI_CLASSIFIER_LAST_LAYER_FOMO: {
                 #if EI_CLASSIFIER_TFLITE_OUTPUT_QUANTIZED == 1
-                    fill_res = fill_result_struct_i8_fomo(impulse, result, out_data, out_data->tflite_output_zeropoint, out_data->tflite_output_scale,
-                        impulse->fomo_output_size, impulse->fomo_output_size);
+                    fill_res = fill_result_struct_i8_fomo(
+                        impulse,
+                        block_config,
+                        result,
+                        out_data,
+                        out_data->tflite_output_zeropoint,
+                        out_data->tflite_output_scale,
+                        impulse->fomo_output_size,
+                        impulse->fomo_output_size);
                 #else
-                    fill_res = fill_result_struct_f32_fomo(impulse, result, out_data,
-                        impulse->fomo_output_size, impulse->fomo_output_size);
+                    fill_res = fill_result_struct_f32_fomo(
+                        impulse,
+                        block_config,
+                        result,
+                        out_data,
+                        impulse->fomo_output_size,
+                        impulse->fomo_output_size);
                 #endif
                 break;
             }
             case EI_CLASSIFIER_LAST_LAYER_SSD: {
-                float *scores_tensor = interpreter->typed_output_tensor<float>(config->output_score_tensor);
-                float *label_tensor = interpreter->typed_output_tensor<float>(config->output_labels_tensor);
+                float *scores_tensor = interpreter->typed_output_tensor<float>(block_config->output_score_tensor);
+                float *label_tensor = interpreter->typed_output_tensor<float>(block_config->output_labels_tensor);
                 if (!scores_tensor) {
                     return EI_IMPULSE_SCORE_TENSOR_WAS_NULL;
                 }
@@ -271,7 +283,14 @@ EI_IMPULSE_ERROR run_nn_inference(
                     ei_printf("ERR: MobileNet SSD does not support quantized inference\n");
                     return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
                 #else
-                    fill_res = fill_result_struct_f32_object_detection(impulse, result, out_data, scores_tensor, label_tensor, debug);
+                    fill_res = fill_result_struct_f32_object_detection(
+                        impulse,
+                        block_config,
+                        result,
+                        out_data,
+                        scores_tensor,
+                        label_tensor,
+                        debug);
                 #endif
                 break;
             }
@@ -281,10 +300,11 @@ EI_IMPULSE_ERROR run_nn_inference(
                     ei_printf("ERR: YOLOv5 does not support quantized inference\n");
                     return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
                 #else
-                    int version = impulse->object_detection_last_layer == EI_CLASSIFIER_LAST_LAYER_YOLOV5_V5_DRPAI ?
+                    int version = block_config->object_detection_last_layer == EI_CLASSIFIER_LAST_LAYER_YOLOV5_V5_DRPAI ?
                         5 : 6;
                     fill_res = fill_result_struct_f32_yolov5(
                         impulse,
+                        block_config,
                         result,
                         version,
                         out_data,
@@ -300,6 +320,7 @@ EI_IMPULSE_ERROR run_nn_inference(
                 #else
                     fill_res = fill_result_struct_f32_yolox(
                         impulse,
+                        block_config,
                         result,
                         out_data,
                         impulse->tflite_output_features_count,
@@ -319,6 +340,7 @@ EI_IMPULSE_ERROR run_nn_inference(
                     }
                     fill_res = fill_result_struct_f32_yolov7(
                         impulse,
+                        block_config,
                         result,
                         output->data.f,
                         output_feature_count);
@@ -327,7 +349,7 @@ EI_IMPULSE_ERROR run_nn_inference(
             }
             default: {
                 ei_printf("ERR: Unsupported object detection last layer (%d)\n",
-                    impulse->object_detection_last_layer);
+                    block_config->object_detection_last_layer);
                 break;
             }
         }
