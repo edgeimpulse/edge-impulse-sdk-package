@@ -213,6 +213,7 @@ EI_IMPULSE_ERROR run_nn_inference(
     memx_status status = MEMX_STATUS_OK;
     int32_t ifmap_height, ifmap_width, ifmap_channel_number, ifmap_format;
     int32_t ofmap_height, ofmap_width, ofmap_channel_number, ofmap_format;
+    int32_t z;
     uint64_t ctx_start_us = 0;
     uint64_t ctx_end_us = 0;
 
@@ -226,13 +227,13 @@ EI_IMPULSE_ERROR run_nn_inference(
 
     /* 4. get input shape - Not needed during runtime, available only for debugging */
     if(verbose_debug) {
-        status = memx_get_ifmap_size(model_id, flow_id, &ifmap_height, &ifmap_width, &ifmap_channel_number, &ifmap_format);
+        status = memx_get_ifmap_size(model_id, flow_id, &ifmap_height, &ifmap_width, &z, &ifmap_channel_number, &ifmap_format);
         ei_printf("status = %d, ifmap shape = (%d, %d, %d), format = %d\n",
                    status, ifmap_height, ifmap_width, ifmap_channel_number, ifmap_format);
     }
 
     // 5. get output shape
-    status = memx_get_ofmap_size(model_id, flow_id, &ofmap_height, &ofmap_width, &ofmap_channel_number, &ofmap_format);
+    status = memx_get_ofmap_size(model_id, flow_id, &ofmap_height, &ofmap_width, &z, &ofmap_channel_number, &ofmap_format);
     if(debug) {
         ei_printf("status = %d, ofmap shape = (%d, %d, %d), format = %d\n",
                   status, ofmap_height, ofmap_width, ofmap_channel_number, ofmap_format);
