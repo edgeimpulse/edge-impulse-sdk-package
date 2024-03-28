@@ -368,8 +368,10 @@ EI_IMPULSE_ERROR run_nn_inference(
         }
     }
 
-    // apply softmax, becuase Akida is not supporting this operation
-    tflite::reference_ops::Softmax(dummy_params, softmax_shape, potentials_v.data(), softmax_shape, potentials_v.data());
+    if(block_config->object_detection_last_layer != EI_CLASSIFIER_LAST_LAYER_YOLOV2) {
+        // apply softmax, becuase Akida is not supporting this operation
+        tflite::reference_ops::Softmax(dummy_params, softmax_shape, potentials_v.data(), softmax_shape, potentials_v.data());
+    }
 
     if(debug == true) {
         ei_printf("After softmax:\n");
@@ -406,6 +408,15 @@ EI_IMPULSE_ERROR run_nn_inference(
                     potentials_v.data(),
                     impulse->fomo_output_size,
                     impulse->fomo_output_size);
+                break;
+            }
+            case EI_CLASSIFIER_LAST_LAYER_YOLOV2: {
+                fill_res = fill_result_struct_f32_yolov2(
+                    impulse,
+                    block_config,
+                    result,
+                    potentials_v.data(),
+                    impulse->tflite_output_features_count);
                 break;
             }
             case EI_CLASSIFIER_LAST_LAYER_SSD: {
