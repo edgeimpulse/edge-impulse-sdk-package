@@ -722,11 +722,11 @@ extern "C" void run_classifier_init()
 #if EI_CLASSIFIER_CALIBRATION_ENABLED
 
     const auto impulse = ei_default_impulse.impulse;
-    const ei_model_performance_calibration_t *calibration = &impulse.calibration;
+    const ei_model_performance_calibration_t *calibration = &impulse->calibration;
 
     if(calibration != NULL) {
         avg_scores = new RecognizeEvents(calibration,
-            impulse.label_count, impulse.slice_size, impulse.interval_ms);
+            impulse->label_count, impulse->slice_size, impulse->interval_ms);
     }
 #endif
 }
@@ -741,7 +741,8 @@ __attribute__((unused)) void run_classifier_init(ei_impulse_handle_t *handle)
     init_impulse(handle);
 
 #if EI_CLASSIFIER_CALIBRATION_ENABLED
-    const ei_model_performance_calibration_t *calibration = &handle->impulse->calibration;
+    auto impulse = handle->impulse;
+    const ei_model_performance_calibration_t *calibration = &impulse->calibration;
 
     if(calibration != NULL) {
         avg_scores = new RecognizeEvents(calibration,
