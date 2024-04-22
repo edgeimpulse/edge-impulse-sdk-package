@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.9/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.11/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.49.9" tag="v1.49.9" date="2024-04-17" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.9/EdgeImpulse.EI-SDK.1.49.9.pack">
+		<release version="1.49.11" tag="v1.49.11" date="2024-04-22" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.11/EdgeImpulse.EI-SDK.1.49.11.pack">
       		EI-SDK
     	</release>	
+		<release version="1.49.9" tag="v1.49.9" date="2024-04-17" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.9/EdgeImpulse.EI-SDK.1.49.9.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.49.5" tag="v1.49.5" date="2024-04-16" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.5/EdgeImpulse.EI-SDK.1.49.5.pack">
       		EI-SDK
     	</release>
@@ -113,7 +116,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.49.9">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.49.11">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
