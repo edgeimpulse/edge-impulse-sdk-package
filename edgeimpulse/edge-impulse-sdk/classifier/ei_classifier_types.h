@@ -26,10 +26,6 @@
 #define EI_CLASSIFIER_MAX_OBJECT_DETECTION_COUNT 10
 #endif
 
-#ifndef EI_CLASSIFIER_MAX_LABELS_COUNT
-#define EI_CLASSIFIER_MAX_LABELS_COUNT 25
-#endif
-
 typedef struct {
     const char *label;
     float value;
@@ -62,7 +58,13 @@ typedef struct {
 typedef struct {
     ei_impulse_result_bounding_box_t *bounding_boxes;
     uint32_t bounding_boxes_count;
-    ei_impulse_result_classification_t classification[EI_CLASSIFIER_MAX_LABELS_COUNT];
+#if EI_CLASSIFIER_LABEL_COUNT == 0
+    // EI_CLASSIFIER_LABEL_COUNT can be 0 for anomaly only models
+    // to prevent compiler warnings/errors, we need to have at least one element
+    ei_impulse_result_classification_t classification[1];
+#else
+    ei_impulse_result_classification_t classification[EI_CLASSIFIER_LABEL_COUNT];
+#endif
     float anomaly;
     ei_impulse_result_timing_t timing;
     bool copy_output;
