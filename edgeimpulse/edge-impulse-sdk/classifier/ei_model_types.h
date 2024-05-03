@@ -107,7 +107,7 @@ typedef struct {
     uint8_t *axes;
     size_t axes_size;
     int version;  // future proof, can easily add to this struct now
-    DspHandle* (*factory)(void* config); // nullptr means no state
+    DspHandle* (*factory)(void* config, float sampling_freq); // nullptr means no state
     // v1 ends here
 } ei_model_dsp_t;
 
@@ -264,7 +264,7 @@ public:
 
     DspHandle* get_dsp_handle(size_t ix) {
         if (dsp_handles[ix] == nullptr) {
-            dsp_handles[ix] = impulse->dsp_blocks[ix].factory(impulse->dsp_blocks[ix].config);
+            dsp_handles[ix] = impulse->dsp_blocks[ix].factory(impulse->dsp_blocks[ix].config, impulse->frequency);
         }
         return dsp_handles[ix];
     }
