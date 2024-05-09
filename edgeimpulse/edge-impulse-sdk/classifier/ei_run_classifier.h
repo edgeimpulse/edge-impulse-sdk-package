@@ -620,6 +620,8 @@ to preserve backwards compatibility. */
 #if EI_CLASSIFIER_LOAD_IMAGE_SCALING
 static const float torch_mean[] = { 0.485, 0.456, 0.406 };
 static const float torch_std[] = { 0.229, 0.224, 0.225 };
+// This is ordered BGR
+static const float tao_mean[] = { 103.939, 116.779, 123.68 };
 
 EI_IMPULSE_ERROR ei_scale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fmatrix) {
     if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_TORCH) {
@@ -661,6 +663,20 @@ EI_IMPULSE_ERROR ei_scale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fmat
             return EI_IMPULSE_DSP_ERROR;
         }
     }
+    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_BGR_SUBTRACT_IMAGENET_MEAN) {
+        int scale_res = numpy::scale(fmatrix, 255.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+        // Transpose RGB to BGR and subtract mean
+        for (size_t ix = 0; ix < fmatrix->rows * fmatrix->cols; ix += 3) {
+            float r = fmatrix->buffer[ix + 0];
+            fmatrix->buffer[ix + 0] = fmatrix->buffer[ix + 2] - tao_mean[0];
+            fmatrix->buffer[ix + 1] -= tao_mean[1];
+            fmatrix->buffer[ix + 2] = r - tao_mean[2];
+        }
+    }
 
     return EI_IMPULSE_OK;
 }
@@ -699,6 +715,20 @@ EI_IMPULSE_ERROR ei_unscale_fmatrix(ei_learning_block_t *block, ei::matrix_t *fm
         }
     }
     else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_0_255) {
+        int scale_res = numpy::scale(fmatrix, 1 / 255.0f);
+        if (scale_res != EIDSP_OK) {
+            ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
+            return EI_IMPULSE_DSP_ERROR;
+        }
+    }
+    else if (block->image_scaling == EI_CLASSIFIER_IMAGE_SCALING_BGR_SUBTRACT_IMAGENET_MEAN) {
+        // Transpose BGR to RGB and add mean
+        for (size_t ix = 0; ix < fmatrix->rows * fmatrix->cols; ix += 3) {
+            float b = fmatrix->buffer[ix + 0];
+            fmatrix->buffer[ix + 0] = fmatrix->buffer[ix + 2] + tao_mean[2];
+            fmatrix->buffer[ix + 1] += tao_mean[1];
+            fmatrix->buffer[ix + 2] = b + tao_mean[0];
+        }
         int scale_res = numpy::scale(fmatrix, 1 / 255.0f);
         if (scale_res != EIDSP_OK) {
             ei_printf("ERR: Failed to scale matrix (%d)\n", scale_res);
