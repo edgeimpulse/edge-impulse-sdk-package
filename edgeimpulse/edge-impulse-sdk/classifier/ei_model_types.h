@@ -100,10 +100,12 @@ typedef struct {
     uint32_t suppression_flags;
 } ei_model_performance_calibration_t;
 
+typedef int (*extract_fn_t)(ei::signal_t *signal, ei::matrix_t *output_matrix, void *config, float frequency);
+
 typedef struct {
     uint32_t blockId;
     size_t n_output_features;
-    int (*extract_fn)(ei::signal_t *signal, ei::matrix_t *output_matrix, void *config, const float frequency);
+    extract_fn_t extract_fn;
     void *config;
     uint8_t *axes;
     size_t axes_size;
