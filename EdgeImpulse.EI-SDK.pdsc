@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.39/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.4/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.49.39" tag="v1.49.39" date="2024-05-20" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.39/EdgeImpulse.EI-SDK.1.49.39.pack">
+		<release version="1.50.4" tag="v1.50.4" date="2024-05-23" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.4/EdgeImpulse.EI-SDK.1.50.4.pack">
       		EI-SDK
     	</release>	
+		<release version="1.49.39" tag="v1.49.39" date="2024-05-20" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.39/EdgeImpulse.EI-SDK.1.49.39.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.49.38" tag="v1.49.38" date="2024-05-17" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.38/EdgeImpulse.EI-SDK.1.49.38.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.45.1" tag="v1.45.1" date="2024-02-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.45.1/EdgeImpulse.EI-SDK.1.43.2.pack">
       		EI-SDK
     	</release>
-		<release version="1.43.2" tag="v1.43.2" date="2024-02-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.43.2/EdgeImpulse.EI-SDK.1.43.2.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.49.39">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.50.4">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
