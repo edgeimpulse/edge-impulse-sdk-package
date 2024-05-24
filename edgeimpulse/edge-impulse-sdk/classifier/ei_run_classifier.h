@@ -144,9 +144,15 @@ __attribute__((unused)) void display_results(ei_impulse_result_t* result)
         ei_printf_float(bb.value);
         ei_printf(") [ x: %u, y: %u, width: %u, height: %u ]\n", bb.x, bb.y, bb.width, bb.height);
     }
-    ei_printf("Visual anomaly values: Mean %.3f Max %.3f\r\n", result->visual_ad_result.mean_value, result->visual_ad_result.max_value);
+    ei_printf("Visual anomaly values: Mean ");
+    ei_printf_float(result->visual_ad_result.mean_value);
+    ei_printf(" Max ");
+    ei_printf_float(result->visual_ad_result.max_value);
+    ei_printf("\r\n");
 #elif (EI_CLASSIFIER_HAS_ANOMALY > 0) // except for visual AD
-    ei_printf("Anomaly prediction: %.3f\r\n", result->anomaly);
+    ei_printf("Anomaly prediction: ");
+    ei_printf_float(result->anomaly);
+    ei_printf("\r\n");
 #endif
 }
 
