@@ -9,7 +9,7 @@
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.50.14" tag="v1.50.14" date="2024-05-31" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.14/EdgeImpulse.EI-SDK.1.50.14.pack">
+		<release version="1.50.14" tag="v1.50.14" date="2024-06-03" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.14/EdgeImpulse.EI-SDK.1.50.14.pack">
       		EI-SDK
     	</release>	
 		<release version="1.50.13" tag="v1.50.13" date="2024-05-30" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.13/EdgeImpulse.EI-SDK.1.50.13.pack">
@@ -97,9 +97,6 @@
       		EI-SDK
     	</release>
 		<release version="1.46.4" tag="v1.46.4" date="2024-03-05" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.46.4/EdgeImpulse.EI-SDK.1.46.4.pack">
-      		EI-SDK
-    	</release>
-		<release version="1.46.1" tag="v1.46.1" date="2024-02-27" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.46.1/EdgeImpulse.EI-SDK.1.46.1.pack">
       		EI-SDK
     	</release>
 	</releases>
