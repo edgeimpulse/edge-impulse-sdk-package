@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.51.3/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.0/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.51.3" tag="v1.51.3" date="2024-06-11" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.51.3/EdgeImpulse.EI-SDK.1.51.3.pack">
+		<release version="1.52.0" tag="v1.52.0" date="2024-06-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.0/EdgeImpulse.EI-SDK.1.52.0.pack">
       		EI-SDK
     	</release>	
+		<release version="1.51.3" tag="v1.51.3" date="2024-06-11" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.51.3/EdgeImpulse.EI-SDK.1.51.3.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.51.1" tag="v1.51.1" date="2024-06-09" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.51.1/EdgeImpulse.EI-SDK.1.51.1.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.48.1" tag="v1.48.1" date="2024-03-14" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.48.1/EdgeImpulse.EI-SDK.1.48.1.pack">
       		EI-SDK
     	</release>
-		<release version="1.47.2" tag="v1.47.2" date="2024-03-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.47.2/EdgeImpulse.EI-SDK.1.47.2.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,15 +146,15 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.51.3">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.52.0">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
                 <file category="include" name="edgeimpulse/"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/c/common.c"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_device_u55_u65.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_driver.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_pmu.c"/>
-					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_device.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/pooling/esp_nn_avg_pool_ansi.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/pooling/esp_nn_max_pool_ansi.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/basic_math/esp_nn_mul_ansi.c"/>
@@ -620,11 +620,15 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ei_classifier_porting.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ei_logging.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/include/ethosu_driver.h"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/include/ethosu_device.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/include/ethosu_types.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/include/pmu_ethosu.h"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_config.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_log.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_device.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_interface.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu55_interface.h"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_common.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu_config_u55.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ethosu65_interface.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/src/ehtosu_config_u65.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/include/esp_nn_esp32s3.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/include/esp_nn_generic_opt.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/include/esp_nn_defs.h"/>
