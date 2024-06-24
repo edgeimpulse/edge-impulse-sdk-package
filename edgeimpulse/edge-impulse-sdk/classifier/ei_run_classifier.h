@@ -451,15 +451,6 @@ extern "C" EI_IMPULSE_ERROR process_impulse_continuous(ei_impulse_handle_t *hand
     result->timing.dsp_us = ei_read_timer_us() - dsp_start_us;
     result->timing.dsp = (int)(result->timing.dsp_us / 1000);
 
-    if (debug) {
-        ei_printf("\r\nFeatures (%d ms.): ", result->timing.dsp);
-        for (size_t ix = 0; ix < static_features_matrix.cols; ix++) {
-            ei_printf_float(static_features_matrix.buffer[ix]);
-            ei_printf(" ");
-        }
-        ei_printf("\n");
-    }
-
     if (classifier_continuous_features_written >= impulse->nn_input_frame_size) {
         dsp_start_us = ei_read_timer_us();
 
@@ -502,6 +493,12 @@ extern "C" EI_IMPULSE_ERROR process_impulse_continuous(ei_impulse_handle_t *hand
         result->timing.dsp = (int)(result->timing.dsp_us / 1000);
 
         if (debug) {
+            ei_printf("Feature Matrix: \n");
+            for (size_t ix = 0; ix < features->matrix->cols; ix++) {
+                ei_printf_float(features->matrix->buffer[ix]);
+                ei_printf(" ");
+            }
+            ei_printf("\n");
             ei_printf("Running impulse...\n");
         }
 

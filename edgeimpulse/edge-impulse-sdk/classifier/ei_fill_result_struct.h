@@ -1134,7 +1134,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_tao_decode_de
         EI_IMPULSE_ERROR nms_res = ei_run_nms(impulse, &class_results,
                                               boxes.data(), scores.data(), classes.data(),
                                               nr_boxes,
-                                              false /*clip_boxes*/,
+                                              true /*clip_boxes*/,
                                               debug);
 
         if (nms_res != EI_IMPULSE_OK) {

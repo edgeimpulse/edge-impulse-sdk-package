@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.0/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.10/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.52.0" tag="v1.52.0" date="2024-06-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.0/EdgeImpulse.EI-SDK.1.52.0.pack">
+		<release version="1.52.10" tag="v1.52.10" date="2024-06-24" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.10/EdgeImpulse.EI-SDK.1.52.10.pack">
       		EI-SDK
     	</release>	
+		<release version="1.52.0" tag="v1.52.0" date="2024-06-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.0/EdgeImpulse.EI-SDK.1.52.0.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.51.3" tag="v1.51.3" date="2024-06-11" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.51.3/EdgeImpulse.EI-SDK.1.51.3.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.48.2" tag="v1.48.2" date="2024-03-18" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.48.2/EdgeImpulse.EI-SDK.1.48.2.pack">
       		EI-SDK
     	</release>
-		<release version="1.48.1" tag="v1.48.1" date="2024-03-14" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.48.1/EdgeImpulse.EI-SDK.1.48.1.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.52.0">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.52.10">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
