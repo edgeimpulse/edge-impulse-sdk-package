@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.11/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.53.3/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.52.11" tag="v1.52.11" date="2024-06-25" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.11/EdgeImpulse.EI-SDK.1.52.11.pack">
+		<release version="1.53.3" tag="v1.53.3" date="2024-07-01" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.53.3/EdgeImpulse.EI-SDK.1.53.3.pack">
       		EI-SDK
     	</release>	
+		<release version="1.52.11" tag="v1.52.11" date="2024-06-25" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.11/EdgeImpulse.EI-SDK.1.52.11.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.52.10" tag="v1.52.10" date="2024-06-24" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.10/EdgeImpulse.EI-SDK.1.52.10.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.48.6" tag="v1.48.6" date="2024-03-22" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.48.6/EdgeImpulse.EI-SDK.1.48.6.pack">
       		EI-SDK
     	</release>
-		<release version="1.48.4" tag="v1.48.4" date="2024-03-20" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.48.4/EdgeImpulse.EI-SDK.1.48.4.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.52.11">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.53.3">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -326,6 +326,8 @@
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/dsp/kissfft/kiss_fftr.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/dsp/image/processing.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/dsp/dct/fast-dct-fft.cpp"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/himax-we2/ei_classifier_porting.cpp"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/himax-we2/debug_log.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/posix/ei_classifier_porting.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/posix/debug_log.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/iar/ei_classifier_porting.cpp"/>
