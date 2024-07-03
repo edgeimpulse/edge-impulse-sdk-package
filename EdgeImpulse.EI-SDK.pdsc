@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.53.3/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.53.5/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.53.3" tag="v1.53.3" date="2024-07-01" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.53.3/EdgeImpulse.EI-SDK.1.53.3.pack">
+		<release version="1.53.5" tag="v1.53.5" date="2024-07-03" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.53.5/EdgeImpulse.EI-SDK.1.53.5.pack">
       		EI-SDK
     	</release>	
+		<release version="1.53.3" tag="v1.53.3" date="2024-07-01" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.53.3/EdgeImpulse.EI-SDK.1.53.3.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.52.11" tag="v1.52.11" date="2024-06-25" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.11/EdgeImpulse.EI-SDK.1.52.11.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.48.7" tag="v1.48.7" date="2024-03-28" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.48.7/EdgeImpulse.EI-SDK.1.48.7.pack">
       		EI-SDK
     	</release>
-		<release version="1.48.6" tag="v1.48.6" date="2024-03-22" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.48.6/EdgeImpulse.EI-SDK.1.48.6.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.53.3">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.53.5">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
