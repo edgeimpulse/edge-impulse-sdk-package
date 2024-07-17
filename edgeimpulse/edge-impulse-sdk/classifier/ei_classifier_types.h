@@ -185,12 +185,12 @@ typedef struct {
     int anomaly;
 
     /**
-     * Amount of time (in milliseconds) it took to run the post-processing block
+     * Amount of time (in microseconds) it took to run the post-processing block
      */
     int64_t dsp_us;
 
     /**
-     * Amount of time (in milliseconds) it took to run the inference block
+     * Amount of time (in microseconds) it took to run the inference block
      */
     int64_t classification_us;
 

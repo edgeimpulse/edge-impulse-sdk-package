@@ -85,9 +85,9 @@ public:
     }
 
     struct sosfilt {
-        const float* coeff; // 6 * num_sections coefficients
+        const float* coeff = nullptr; // 6 * num_sections coefficients
         fvec zi_vec; // 2 * num_sections initial conditions
-        size_t num_sections;
+        size_t num_sections = 0;
 
         sosfilt(const float* coeff_, const float* zi_, size_t num_sections_)
             : coeff(coeff_),
@@ -96,8 +96,20 @@ public:
         {
         }
 
+        sosfilt()
+        {
+        }
+
         void update(const float* coeff_, const float* zi_)
         {
+            assert(num_sections > 0);
+            coeff = coeff_;
+            zi_vec.assign(zi_, zi_ + (num_sections * 2));
+        }
+
+        void update(const float* coeff_, const float* zi_, size_t num_sections_)
+        {
+            num_sections = num_sections_;
             coeff = coeff_;
             zi_vec.assign(zi_, zi_ + (num_sections * 2));
         }
