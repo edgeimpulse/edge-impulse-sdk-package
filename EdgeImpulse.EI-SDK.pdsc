@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.54.4/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.54.8/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.54.4" tag="v1.54.4" date="2024-07-24" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.54.4/EdgeImpulse.EI-SDK.1.54.4.pack">
+		<release version="1.54.8" tag="v1.54.8" date="2024-07-30" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.54.8/EdgeImpulse.EI-SDK.1.54.8.pack">
       		EI-SDK
     	</release>	
+		<release version="1.54.4" tag="v1.54.4" date="2024-07-24" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.54.4/EdgeImpulse.EI-SDK.1.54.4.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.54.1" tag="v1.54.1" date="2024-07-18" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.54.1/EdgeImpulse.EI-SDK.1.54.1.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.49.14" tag="v1.49.14" date="2024-04-25" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.14/EdgeImpulse.EI-SDK.1.49.14.pack">
       		EI-SDK
     	</release>
-		<release version="1.49.11" tag="v1.49.11" date="2024-04-22" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.11/EdgeImpulse.EI-SDK.1.49.11.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.54.4">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.54.8">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -302,6 +302,7 @@
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/activations.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/space_to_batch_nd.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/logical.cpp"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/scatter_nd.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/log_softmax.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/assign_variable.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/scratch_buffers.cpp"/>
@@ -516,6 +517,7 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference_portable_tensor_utils_impl.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/portable_tensor.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/min.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reduce_common.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/types.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/cppmath.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/quantization_util.h"/>
@@ -535,6 +537,7 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/fill.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/requantize.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/leaky_relu.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/scatter_nd.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/floor_mod.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/logistic.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/kernels/internal/reference/fully_connected.h"/>
