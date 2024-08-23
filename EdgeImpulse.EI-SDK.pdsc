@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.56.9/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.1/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.56.9" tag="v1.56.9" date="2024-08-13" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.56.9/EdgeImpulse.EI-SDK.1.56.9.pack">
+		<release version="1.57.1" tag="v1.57.1" date="2024-08-23" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.1/EdgeImpulse.EI-SDK.1.57.1.pack">
       		EI-SDK
     	</release>	
+		<release version="1.56.9" tag="v1.56.9" date="2024-08-13" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.56.9/EdgeImpulse.EI-SDK.1.56.9.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.56.2" tag="v1.56.2" date="2024-08-06" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.56.2/EdgeImpulse.EI-SDK.1.56.2.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.49.23" tag="v1.49.23" date="2024-05-09" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.23/EdgeImpulse.EI-SDK.1.49.23.pack">
       		EI-SDK
     	</release>
-		<release version="1.49.21" tag="v1.49.21" date="2024-05-03" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.21/EdgeImpulse.EI-SDK.1.49.21.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.56.9">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.57.1">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -287,8 +287,10 @@
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/logical_common.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/quantize.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/circular_buffer.cpp"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/tile.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/logistic_common.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/cast.cpp"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/topk_v2.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/var_handle.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/activations_common.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/tensorflow/lite/micro/kernels/tree_ensemble_classifier.cpp"/>

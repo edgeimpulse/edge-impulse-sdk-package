@@ -294,7 +294,12 @@ extern "C" EI_IMPULSE_ERROR process_impulse(ei_impulse_handle_t *handle,
             auto dsp_handle = handle->state.get_dsp_handle(ix);
             if(dsp_handle) {
                 ret = dsp_handle->extract(internal_signal, features[ix].matrix, block.config, handle->impulse->frequency);
-            } else {
+                #if EI_DSP_ENABLE_RUNTIME_HR == 1
+                hr_class* hr = static_cast<hr_class*>(dsp_handle);
+                result->heart_rate = hr->get_last_hr();
+                #endif
+            }
+            else {
                 return EI_IMPULSE_OUT_OF_MEMORY;
             }
         } else {

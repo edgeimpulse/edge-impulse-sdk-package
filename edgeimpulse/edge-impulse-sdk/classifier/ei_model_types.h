@@ -109,7 +109,7 @@ typedef struct {
     extract_fn_t extract_fn;
     void *config;
     uint8_t *axes;
-    uint8_t axes_size;
+    uint32_t axes_size;
     int version;  // future proof, can easily add to this struct now
     DspHandle* (*factory)(void* config, float sampling_freq); // nullptr means no state
     // v1 ends here
