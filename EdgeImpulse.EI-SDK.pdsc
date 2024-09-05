@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.1/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.9/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.57.1" tag="v1.57.1" date="2024-08-23" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.1/EdgeImpulse.EI-SDK.1.57.1.pack">
+		<release version="1.57.9" tag="v1.57.9" date="2024-09-05" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.9/EdgeImpulse.EI-SDK.1.57.9.pack">
       		EI-SDK
     	</release>	
+		<release version="1.57.1" tag="v1.57.1" date="2024-08-23" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.1/EdgeImpulse.EI-SDK.1.57.1.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.56.9" tag="v1.56.9" date="2024-08-13" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.56.9/EdgeImpulse.EI-SDK.1.56.9.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.49.27" tag="v1.49.27" date="2024-05-13" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.27/EdgeImpulse.EI-SDK.1.49.27.pack">
       		EI-SDK
     	</release>
-		<release version="1.49.23" tag="v1.49.23" date="2024-05-09" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.23/EdgeImpulse.EI-SDK.1.49.23.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.57.1">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.57.9">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -372,7 +372,6 @@
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/sony/debug_log.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ti/ei_classifier_porting.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ti/debug_log.cpp"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_performance_calibration.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_aligned_malloc.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_run_dsp.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_nms.h"/>
@@ -401,6 +400,10 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/tensaiflow.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/memryx.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/engines.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_performance_calibration.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_postprocessing_types.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_postprocessing.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_object_counting.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/third_party/ruy/ruy/profiler/instrumentation.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/third_party/gemmlowp/internal/detect_platform.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/third_party/gemmlowp/fixedpoint/fixedpoint_neon.h"/>
