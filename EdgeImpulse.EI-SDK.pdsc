@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.11/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.18/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.57.11" tag="v1.57.11" date="2024-09-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.11/EdgeImpulse.EI-SDK.1.57.11.pack">
+		<release version="1.57.18" tag="v1.57.18" date="2024-09-18" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.18/EdgeImpulse.EI-SDK.1.57.18.pack">
       		EI-SDK
     	</release>	
+		<release version="1.57.11" tag="v1.57.11" date="2024-09-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.11/EdgeImpulse.EI-SDK.1.57.11.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.57.9" tag="v1.57.9" date="2024-09-05" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.9/EdgeImpulse.EI-SDK.1.57.9.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.49.31" tag="v1.49.31" date="2024-05-15" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.31/EdgeImpulse.EI-SDK.1.49.31.pack">
       		EI-SDK
     	</release>
-		<release version="1.49.30" tag="v1.49.30" date="2024-05-14" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.30/EdgeImpulse.EI-SDK.1.49.30.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.57.11">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.57.18">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -353,7 +353,6 @@
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/mbed/debug_log.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/stm32-cubeai/ei_classifier_porting.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/stm32-cubeai/debug_log.cpp"/>
-					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ethos-u-driver-stack-imx/driver_library/src/ethosu.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/arduino/ei_classifier_porting.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/arduino/debug_log.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/synaptics/ei_classifier_porting.cpp"/>
@@ -634,7 +633,6 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/dct/fast-dct-fft.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ei_classifier_porting.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ei_logging.h"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-u-driver-stack-imx/kernel_driver/include/uapi/ethosu.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/include/ethosu_driver.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/include/ethosu_types.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/include/pmu_ethosu.h"/>
@@ -672,7 +670,6 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/speechpy/feature.hpp"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/speechpy/speechpy.hpp"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/speechpy/processing.hpp"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-u-driver-stack-imx/driver_library/include/ethosu.hpp"/>
 				</files>
 		</component>
 	</components>
