@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.18/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.60.2/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.57.18" tag="v1.57.18" date="2024-09-18" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.18/EdgeImpulse.EI-SDK.1.57.18.pack">
+		<release version="1.60.2" tag="v1.60.2" date="2024-10-14" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.60.2/EdgeImpulse.EI-SDK.1.60.2.pack">
       		EI-SDK
     	</release>	
+		<release version="1.57.18" tag="v1.57.18" date="2024-09-18" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.18/EdgeImpulse.EI-SDK.1.57.18.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.57.11" tag="v1.57.11" date="2024-09-12" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.57.11/EdgeImpulse.EI-SDK.1.57.11.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.49.38" tag="v1.49.38" date="2024-05-17" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.38/EdgeImpulse.EI-SDK.1.49.38.pack">
       		EI-SDK
     	</release>
-		<release version="1.49.31" tag="v1.49.31" date="2024-05-15" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.49.31/EdgeImpulse.EI-SDK.1.49.31.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.57.18">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.60.2">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -355,6 +355,8 @@
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/stm32-cubeai/debug_log.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/arduino/ei_classifier_porting.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/arduino/debug_log.cpp"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ambiq/ei_classifier_porting.cpp"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/ambiq/debug_log.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/synaptics/ei_classifier_porting.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/synaptics/debug_log.cpp"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/mingw32/ei_classifier_porting.cpp"/>
@@ -374,6 +376,7 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_aligned_malloc.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_run_dsp.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_nms.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_constants.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_run_classifier_c.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_run_classifier.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_run_classifier_image.h"/>
@@ -631,6 +634,8 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/kissfft/kissfft.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/kissfft/kiss_fftr.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/dct/fast-dct-fft.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/dsp_engines/ei_arm_cmsis_dsp.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/dsp_engines/ei_no_hw_dsp.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ei_classifier_porting.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ei_logging.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/ethos-core-driver/include/ethosu_driver.h"/>
