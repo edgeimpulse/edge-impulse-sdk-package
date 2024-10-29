@@ -249,7 +249,8 @@ extern "C" EI_IMPULSE_ERROR process_impulse(ei_impulse_handle_t *handle,
     memset(features, 0, sizeof(ei_feature_t) * block_num);
 
     // have it outside of the loop to avoid going out of scope
-    std::unique_ptr<ei::matrix_t> *matrix_ptrs = new std::unique_ptr<ei::matrix_t>[block_num];
+    std::unique_ptr<std::unique_ptr<ei::matrix_t>[]> matrix_ptrs_ptr(new std::unique_ptr<ei::matrix_t>[block_num]);
+    std::unique_ptr<ei::matrix_t> *matrix_ptrs = matrix_ptrs_ptr.get();
 
     uint64_t dsp_start_us = ei_read_timer_us();
 
@@ -263,14 +264,12 @@ extern "C" EI_IMPULSE_ERROR process_impulse(ei_impulse_handle_t *handle,
 
         if (out_features_index + block.n_output_features > handle->impulse->nn_input_frame_size) {
             ei_printf("ERR: Would write outside feature buffer\n");
-            delete[] matrix_ptrs;
             return EI_IMPULSE_DSP_ERROR;
         }
 
 #if EIDSP_SIGNAL_C_FN_POINTER
         if (block.axes_size != handle->impulse->raw_samples_per_frame) {
             ei_printf("ERR: EIDSP_SIGNAL_C_FN_POINTER can only be used when all axes are selected for DSP blocks\n");
-            delete[] matrix_ptrs;
             return EI_IMPULSE_DSP_ERROR;
         }
         auto internal_signal = signal;
@@ -291,11 +290,12 @@ extern "C" EI_IMPULSE_ERROR process_impulse(ei_impulse_handle_t *handle,
             // getter has a lazy init, so we can just call it
             auto dsp_handle = handle->state.get_dsp_handle(ix);
             if(dsp_handle) {
-                ret = dsp_handle->extract(internal_signal, features[ix].matrix, block.config, handle->impulse->frequency);
-                #if EI_DSP_ENABLE_RUNTIME_HR == 1
-                hr_class* hr = static_cast<hr_class*>(dsp_handle);
-                result->hr_calcs.heart_rate = hr->get_last_hr();
-                #endif
+                ret = dsp_handle->extract(
+                    internal_signal,
+                    features[ix].matrix,
+                    block.config,
+                    handle->impulse->frequency,
+                    result);
             }
             else {
                 return EI_IMPULSE_OUT_OF_MEMORY;
@@ -306,12 +306,10 @@ extern "C" EI_IMPULSE_ERROR process_impulse(ei_impulse_handle_t *handle,
 
         if (ret != EIDSP_OK) {
             ei_printf("ERR: Failed to run DSP process (%d)\n", ret);
-            delete[] matrix_ptrs;
             return EI_IMPULSE_DSP_ERROR;
         }
 
         if (ei_run_impulse_check_canceled() == EI_IMPULSE_CANCELED) {
-            delete[] matrix_ptrs;
             return EI_IMPULSE_CANCELED;
         }
 
@@ -351,10 +349,16 @@ extern "C" EI_IMPULSE_ERROR process_impulse(ei_impulse_handle_t *handle,
         ei_printf("Running impulse...\n");
     }
 
+#if EI_CLASSIFIER_DSP_ONLY
+    return EI_IMPULSE_OK;
+#else
     EI_IMPULSE_ERROR res = run_inference(handle, features, result, debug);
-    delete[] matrix_ptrs;
-    res = run_postprocessing(handle, result, debug);
-    return res;
+    if (res != EI_IMPULSE_OK) {
+        return res;
+    } else {
+        return run_postprocessing(handle, result, debug);
+    }
+#endif
 }
 
 /**

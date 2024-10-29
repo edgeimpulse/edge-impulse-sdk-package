@@ -613,7 +613,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_quantized_yol
 
         if (score >= block_config->threshold && score <= 1.0f) {
             ei_impulse_result_bounding_box_t r;
-            r.label = ei_classifier_inferencing_categories[label];
+            r.label = impulse->categories[label];
 
             if (version != 5) {
                 x *= static_cast<float>(impulse->input_width);
@@ -884,7 +884,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_yolox_det
 
         if (confidence >= block_config->threshold && confidence <= 1.0f) {
             ei_impulse_result_bounding_box_t r;
-            r.label = ei_classifier_inferencing_categories[class_idx];
+            r.label = impulse->categories[class_idx];
             r.value = confidence;
 
             // now find the box...
@@ -959,7 +959,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_yolov7(co
 
         if (score >= block_config->threshold && score <= 1.0f) {
             ei_impulse_result_bounding_box_t r;
-            r.label = ei_classifier_inferencing_categories[label];
+            r.label = impulse->categories[label];
 
             r.x = static_cast<uint32_t>(xmin);
             r.y = static_cast<uint32_t>(ymin);
@@ -1691,7 +1691,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_yolov2(co
     // convert relative coordinates to absolute coordinates
     for(auto & box: boxes) {
         ei_impulse_result_bounding_box_t res;
-        res.label = ei_classifier_inferencing_categories[box.get_label()];
+        res.label = impulse->categories[box.get_label()];
         res.x = ceil(box.x1 * impulse->input_width);
         res.y = ceil(box.y1 * impulse->input_height);
         res.width = ceil((box.x2 - box.x1) * impulse->input_width);
