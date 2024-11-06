@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.60.13/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.61.7/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.60.13" tag="v1.60.13" date="2024-10-29" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.60.13/EdgeImpulse.EI-SDK.1.60.13.pack">
+		<release version="1.61.7" tag="v1.61.7" date="2024-11-06" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.61.7/EdgeImpulse.EI-SDK.1.61.7.pack">
       		EI-SDK
     	</release>	
+		<release version="1.60.13" tag="v1.60.13" date="2024-10-29" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.60.13/EdgeImpulse.EI-SDK.1.60.13.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.60.9" tag="v1.60.9" date="2024-10-24" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.60.9/EdgeImpulse.EI-SDK.1.60.9.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.50.13" tag="v1.50.13" date="2024-05-30" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.13/EdgeImpulse.EI-SDK.1.50.13.pack">
       		EI-SDK
     	</release>
-		<release version="1.50.11" tag="v1.50.11" date="2024-05-27" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.11/EdgeImpulse.EI-SDK.1.50.11.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.60.13">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.61.7">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -403,9 +403,11 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/memryx.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/engines.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_performance_calibration.h"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_postprocessing_types.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_postprocessing_common.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_postprocessing.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_object_counting.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/ei_object_tracking.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/tinyEKF/tinyekf_custom.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/third_party/ruy/ruy/profiler/instrumentation.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/third_party/gemmlowp/internal/detect_platform.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/third_party/gemmlowp/fixedpoint/fixedpoint_neon.h"/>
@@ -656,6 +658,9 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/include/esp_nn_ansi_c.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/common/common_functions.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/softmax/softmax_common.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/alignment/ei_alignment.hpp"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/alignment/rectangular_lsap.hpp"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/tinyEKF/tinyekf.hpp"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/config.hpp"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/numpy.hpp"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/dsp/memory.hpp"/>

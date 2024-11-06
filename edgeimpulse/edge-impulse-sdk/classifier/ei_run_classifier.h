@@ -233,7 +233,12 @@ extern "C" EI_IMPULSE_ERROR process_impulse(ei_impulse_handle_t *handle,
     // Shortcut for quantized image models
     ei_learning_block_t block = handle->impulse->learning_blocks[0];
     if (can_run_classifier_image_quantized(handle->impulse, block) == EI_IMPULSE_OK) {
-        return run_classifier_image_quantized(handle->impulse, signal, result, debug);
+        EI_IMPULSE_ERROR res = run_classifier_image_quantized(handle->impulse, signal, result, debug);
+        if (res != EI_IMPULSE_OK) {
+            return res;
+        }
+        res = run_postprocessing(handle, result, debug);
+        return res;
     }
 #endif
 

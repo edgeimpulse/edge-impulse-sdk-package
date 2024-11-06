@@ -147,6 +147,7 @@ __attribute__((unused)) static void fill_result_struct_from_cubes(ei_impulse_res
     static std::vector<ei_impulse_result_bounding_box_t> results;
     int added_boxes_count = 0;
     results.clear();
+
     for (auto sc : *cubes) {
         bool has_overlapping = false;
 
@@ -199,7 +200,7 @@ __attribute__((unused)) static void fill_result_struct_from_cubes(ei_impulse_res
     }
 
     result->bounding_boxes = results.data();
-    result->bounding_boxes_count = results.size();
+    result->bounding_boxes_count = added_boxes_count;
 }
 #endif
 
@@ -283,8 +284,10 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_object_de
                                                                                         bool debug) {
 #ifdef EI_HAS_SSD
     static std::vector<ei_impulse_result_bounding_box_t> results;
+    int added_boxes_count = 0;
     results.clear();
     results.resize(impulse->object_detection_count);
+
     for (size_t ix = 0; ix < impulse->object_detection_count; ix++) {
 
         float score = scores[ix];
@@ -329,13 +332,15 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_object_de
             results[ix].width = static_cast<uint32_t>((xend - xstart) * static_cast<float>(impulse->input_width));
             results[ix].height = static_cast<uint32_t>((yend - ystart) * static_cast<float>(impulse->input_height));
             results[ix].value = score;
+
+            added_boxes_count++;
         }
         else {
             results[ix].value = 0.0f;
         }
     }
     result->bounding_boxes = results.data();
-    result->bounding_boxes_count = results.size();
+    result->bounding_boxes_count = added_boxes_count;
 
     return EI_IMPULSE_OK;
 #else
@@ -547,7 +552,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_yolov5(co
     }
 
     result->bounding_boxes = results.data();
-    result->bounding_boxes_count = results.size();
+    result->bounding_boxes_count = added_boxes_count;
 
     return EI_IMPULSE_OK;
 #else
@@ -647,7 +652,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_quantized_yol
     }
 
     result->bounding_boxes = results.data();
-    result->bounding_boxes_count = results.size();
+    result->bounding_boxes_count = added_boxes_count;
 
     return EI_IMPULSE_OK;
 #else
@@ -852,7 +857,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_yolox(con
     }
 
     result->bounding_boxes = results.data();
-    result->bounding_boxes_count = results.size();
+    result->bounding_boxes_count = added_boxes_count;
 
     return EI_IMPULSE_OK;
 #else
@@ -1711,7 +1716,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR fill_result_struct_f32_yolov2(co
     }
 
     result->bounding_boxes = results.data();
-    result->bounding_boxes_count = results.size();
+    result->bounding_boxes_count = added_boxes_count;
 
     return EI_IMPULSE_OK;
 #else
