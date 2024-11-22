@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.61.12/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.61.23/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.61.12" tag="v1.61.12" date="2024-11-11" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.61.12/EdgeImpulse.EI-SDK.1.61.12.pack">
+		<release version="1.61.23" tag="v1.61.23" date="2024-11-22" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.61.23/EdgeImpulse.EI-SDK.1.61.23.pack">
       		EI-SDK
     	</release>	
+		<release version="1.61.12" tag="v1.61.12" date="2024-11-11" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.61.12/EdgeImpulse.EI-SDK.1.61.12.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.61.7" tag="v1.61.7" date="2024-11-06" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.61.7/EdgeImpulse.EI-SDK.1.61.7.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.50.17" tag="v1.50.17" date="2024-06-04" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.17/EdgeImpulse.EI-SDK.1.50.17.pack">
       		EI-SDK
     	</release>
-		<release version="1.50.14" tag="v1.50.14" date="2024-06-03" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.50.14/EdgeImpulse.EI-SDK.1.50.14.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.61.12">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.61.23">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -164,6 +164,7 @@
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/activation_functions/esp_nn_relu_ansi.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/softmax/esp_nn_softmax_opt.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/softmax/esp_nn_softmax_ansi.c"/>
+					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/convolution/esp_nn_conv_esp32p4.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/convolution/esp_nn_conv_opt.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/convolution/esp_nn_conv_ansi.c"/>
 					<file category="source" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/convolution/esp_nn_depthwise_conv_ansi.c"/>
@@ -656,6 +657,7 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/include/esp_nn_ansi_headers.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/include/esp_nn.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/include/esp_nn_ansi_c.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/include/esp_nn_esp32p4.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/common/common_functions.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/porting/espressif/ESP-NN/src/softmax/softmax_common.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/postprocessing/alignment/ei_alignment.hpp"/>

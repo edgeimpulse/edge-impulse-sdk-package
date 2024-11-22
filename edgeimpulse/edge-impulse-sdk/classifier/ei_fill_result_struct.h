@@ -21,9 +21,6 @@
 using namespace ei;
 
 #include "model-parameters/model_metadata.h"
-#if EI_CLASSIFIER_HAS_MODEL_VARIABLES == 1
-#include "model-parameters/model_variables.h"
-#endif
 #include "edge-impulse-sdk/classifier/ei_model_types.h"
 #include "edge-impulse-sdk/classifier/ei_classifier_types.h"
 #include "edge-impulse-sdk/classifier/ei_nms.h"
