@@ -2511,7 +2511,7 @@ private:
             first_time = false; // only warn once
             if (res == EIDSP_FFT_SIZE_NOT_SUPPORTED) {
                 EI_LOGI("HW RFFT failed, FFT size not supported. Must be a power of 2 between %d and %d, (size was %d)",
-                    ei::fft::MIN_FFT_SIZE, ei::fft::MAX_FFT_SIZE, n_fft);
+                    ei::fft::MIN_FFT_SIZE, ei::fft::MAX_FFT_SIZE, (int)n_fft);
             }
             else {
                 EI_LOGI("HW RFFT failed, falling back to SW");
