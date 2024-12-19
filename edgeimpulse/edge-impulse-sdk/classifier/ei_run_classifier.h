@@ -19,6 +19,7 @@
 #define _EDGE_IMPULSE_RUN_CLASSIFIER_H_
 
 #include "ei_model_types.h"
+#include "sdk_version.h"
 #include "model-parameters/model_metadata.h"
 
 #include "ei_run_dsp.h"
@@ -66,6 +67,15 @@
 #error "Unknown inferencing engine"
 #endif
 
+// strictly require sdk version and studio version macros to match
+#if EI_SDK_VERSION_MAJOR != EI_STUDIO_VERSION_MAJOR || EI_SDK_VERSION_MINOR != EI_STUDIO_VERSION_MINOR || EI_SDK_VERSION_PATCH != EI_STUDIO_VERSION_PATCH
+#if EI_SDK_VERSION_MAJOR == 0
+#pragma message "SDK version not set."
+#else
+#error "Version mismatch between edge-impulse-sdk and the model (model-parameters and tflite-model). Make sure you use the same version for both. Advised to download the deployment files again from Edge Impulse."
+#endif
+#endif
+
 // This file has an implicit dependency on ei_run_dsp.h, so must come after that include!
 #include "model-parameters/model_variables.h"
 
@@ -100,8 +110,14 @@ therefore changes are allowed. */
 __attribute__((unused)) void display_results(ei_impulse_handle_t *handle, ei_impulse_result_t* result)
 {
     // print the predictions
-    ei_printf("Predictions (DSP: %d ms., Classification: %d ms., Anomaly: %d ms.): \n",
-                result->timing.dsp, result->timing.classification, result->timing.anomaly);
+    ei_printf("Timing: DSP ");
+    result->timing.dsp_us ? ei_printf_float((float)result->timing.dsp_us/1000) : ei_printf("%d", result->timing.dsp);
+    ei_printf(" ms, inference ");
+    result->timing.classification_us ? ei_printf_float((float)result->timing.classification_us/1000) : ei_printf("%d", result->timing.classification);
+    ei_printf(" ms, anomaly ");
+    result->timing.anomaly_us ? ei_printf_float((float)result->timing.anomaly_us/1000) : ei_printf("%d", result->timing.anomaly);
+    ei_printf(" ms\r\n");
+
 #if EI_CLASSIFIER_OBJECT_DETECTION == 1
     ei_printf("#Object detection results:\r\n");
     bool bb_found = result->bounding_boxes[0].value > 0;

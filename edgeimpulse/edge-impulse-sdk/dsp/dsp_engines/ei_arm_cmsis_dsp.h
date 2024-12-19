@@ -196,64 +196,21 @@ static int arm_rfft(const float *input, float *output, size_t n_fft)
     return 0;
 }
 
-static int hw_r2c_fft(const float *input, ei::fft_complex_t *output, size_t n_fft)
+static int hw_r2c_fft(const float *input, ei::fft_complex_t *output_as_complex, size_t n_fft)
 {
-    if(!can_do_fft(n_fft)) { EIDSP_ERR(ei::EIDSP_FFT_SIZE_NOT_SUPPORTED); }
+    if(!can_do_fft(n_fft)) { return ei::EIDSP_FFT_SIZE_NOT_SUPPORTED; }
 
-    float *arm_fft_out;
-    auto allocator = EI_MAKE_TRACKED_POINTER(arm_fft_out, n_fft);
-
-    if (!arm_fft_out)
-    {
-        EIDSP_ERR(ei::EIDSP_OUT_OF_MEM);
-    }
+    float *output = (float *)output_as_complex;
 
     // non zero is fail
-    if(arm_rfft(input, arm_fft_out, n_fft)) { EIDSP_ERR(ei::EIDSP_PARAMETER_INVALID); }
+    if(arm_rfft(input, output, n_fft)) { return ei::EIDSP_PARAMETER_INVALID; }
 
     const size_t n_fft_out_features = n_fft / 2 + 1;
-    output[0].r = arm_fft_out[0];
-    output[0].i = 0.0f;
-    output[n_fft_out_features - 1].r = arm_fft_out[1];
-    output[n_fft_out_features - 1].i = 0.0f;
+    // Take care of the Nyquist bin
+    output_as_complex[n_fft_out_features - 1].r = output[1];
+    output_as_complex[n_fft_out_features - 1].i = 0.0f;
+    output_as_complex[0].i = 0.0f;
 
-    size_t fft_output_buffer_ix = 2;
-    for (size_t ix = 1; ix < n_fft_out_features - 1; ix += 1) {
-        output[ix].r = arm_fft_out[fft_output_buffer_ix];
-        output[ix].i = arm_fft_out[fft_output_buffer_ix + 1];
-
-        fft_output_buffer_ix += 2;
-    }
-    return ei::EIDSP_OK;
-}
-
-static int hw_r2r_fft(const float *input, float *output, size_t n_fft)
-{
-    if(!can_do_fft(n_fft)) { return ei::EIDSP_NOT_SUPPORTED; }
-
-    float *arm_fft_out;
-    auto allocator = EI_MAKE_TRACKED_POINTER(arm_fft_out, n_fft);
-
-    if (!arm_fft_out)
-    {
-        EIDSP_ERR(ei::EIDSP_OUT_OF_MEM);
-    }
-
-    // non zero is fail
-    if(arm_rfft(input, arm_fft_out, n_fft)) { EIDSP_ERR(ei::EIDSP_PARAMETER_INVALID); }
-
-    const size_t n_fft_out_features = n_fft / 2 + 1;
-    output[0] = arm_fft_out[0]; // DC component
-    output[n_fft_out_features - 1] = arm_fft_out[1]; // ARM puts the nyquist at the beginning
-
-    size_t fft_output_buffer_ix = 2;
-    for (size_t ix = 1; ix < n_fft_out_features - 1; ix += 1) {
-        float rms_result;
-        arm_rms_f32(arm_fft_out + fft_output_buffer_ix, 2, &rms_result);
-        output[ix] = rms_result * sqrt(2);
-
-        fft_output_buffer_ix += 2;
-    }
     return ei::EIDSP_OK;
 }
 

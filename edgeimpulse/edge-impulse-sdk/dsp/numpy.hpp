@@ -45,7 +45,7 @@
 #endif
 
 #if EIDSP_USE_CEVA_DSP
-// TODO
+#include "edge-impulse-sdk/dsp/dsp_engines/ei_ceva_dsp.h"
 #elif EIDSP_USE_CMSIS_DSP
 #include "edge-impulse-sdk/dsp/dsp_engines/ei_arm_cmsis_dsp.h"
 #else
@@ -1289,28 +1289,19 @@ public:
             EIDSP_ERR(EIDSP_BUFFER_SIZE_MISMATCH);
         }
 
-        // truncate if needed
-        if (src_size > n_fft) {
-            src_size = n_fft;
+        fft_complex_t *fft_output = NULL;
+        auto ptr = EI_MAKE_TRACKED_POINTER(fft_output, n_fft_out_features);
+        EI_ERR_AND_RETURN_ON_NULL(fft_output, EIDSP_OUT_OF_MEM);
+
+        int ret = rfft(src, src_size, fft_output, n_fft_out_features, n_fft);
+        if (ret != EIDSP_OK) {
+            return ret;
         }
 
-        // declare input and output arrays
-        EI_DSP_MATRIX(fft_input, 1, n_fft);
-        if (!fft_input.buffer) {
-            EIDSP_ERR(EIDSP_OUT_OF_MEM);
+        // Calculate magnitude from complex values
+        for (size_t ix = 0; ix < n_fft_out_features; ix++) {
+            output[ix] = sqrt(fft_output[ix].r * fft_output[ix].r + fft_output[ix].i * fft_output[ix].i);
         }
-
-        // copy from src to fft_input
-        memcpy(fft_input.buffer, src, src_size * sizeof(float));
-        // pad to the rigth with zeros
-        memset(fft_input.buffer + src_size, 0, (n_fft - src_size) * sizeof(kiss_fft_scalar));
-
-        auto res = ei::fft::hw_r2r_fft(fft_input.buffer, output, n_fft);
-        if (handle_fft_hw_failure(res, n_fft)) {
-            // fallback to software
-            return software_rfft(fft_input.buffer, output, n_fft, n_fft_out_features);
-        }
-
         return EIDSP_OK;
     }
 
@@ -1338,10 +1329,11 @@ public:
 
         // declare input and output arrays
         float *fft_input_buffer = NULL;
-        if (src_size >= n_fft) {
+        if (src_size >= n_fft) { // technically they can only be equal or src < n_fft, b/c of step above
             fft_input_buffer = (float*)src;
         } // else we need to copy over and pad
 
+        // If fft_input_buffer is NULL (see above), then the constructor will allocate a new buffer
         EI_DSP_MATRIX_B(fft_input, 1, n_fft, fft_input_buffer);
         if (!fft_input.buffer) {
             EIDSP_ERR(EIDSP_OUT_OF_MEM);
@@ -1727,41 +1719,6 @@ public:
         return EIDSP_OK;
     }
 
-    static int software_rfft(float *fft_input, float *output, size_t n_fft, size_t n_fft_out_features) {
-    #if EIDSP_INCLUDE_KISSFFT || !defined(EIDSP_INCLUDE_KISSFFT)
-        kiss_fft_cpx *fft_output = (kiss_fft_cpx*)ei_dsp_malloc(n_fft_out_features * sizeof(kiss_fft_cpx));
-        if (!fft_output) {
-            EIDSP_ERR(EIDSP_OUT_OF_MEM);
-        }
-
-        size_t kiss_fftr_mem_length;
-
-        // create fftr context
-        kiss_fftr_cfg cfg = kiss_fftr_alloc(n_fft, 0, NULL, NULL, &kiss_fftr_mem_length);
-        if (!cfg) {
-            ei_dsp_free(fft_output, n_fft_out_features * sizeof(kiss_fft_cpx));
-            EIDSP_ERR(EIDSP_OUT_OF_MEM);
-        }
-
-        ei_dsp_register_alloc(kiss_fftr_mem_length, cfg);
-
-        // execute the rfft operation
-        kiss_fftr(cfg, fft_input, fft_output);
-
-        // and write back to the output
-        for (size_t ix = 0; ix < n_fft_out_features; ix++) {
-            output[ix] = sqrt(pow(fft_output[ix].r, 2) + pow(fft_output[ix].i, 2));
-        }
-
-        ei_dsp_free(cfg, kiss_fftr_mem_length);
-        ei_dsp_free(fft_output, n_fft_out_features * sizeof(kiss_fft_cpx));
-
-        return EIDSP_OK;
-    #else
-        return EIDSP_NOT_SUPPORTED;
-    #endif
-    }
-
     static int software_rfft(float *fft_input, fft_complex_t *output, size_t n_fft, size_t n_fft_out_features)
     {
     #if EIDSP_INCLUDE_KISSFFT || !defined(EIDSP_INCLUDE_KISSFFT)
@@ -1789,12 +1746,6 @@ public:
     static int signal_get_data(const float *in_buffer, size_t offset, size_t length, float *out_ptr)
     {
         memcpy(out_ptr, in_buffer + offset, length * sizeof(float));
-        return 0;
-    }
-
-    static int signal_get_data_i16(int16_t *in_buffer, size_t offset, size_t length, int16_t *out_ptr)
-    {
-        memcpy(out_ptr, in_buffer + offset, length * sizeof(int16_t));
         return 0;
     }
 

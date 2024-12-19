@@ -227,7 +227,9 @@ static ei_unique_ptr_t make_tracked_unique_ptr(void* ptr_in, size_t size) {
 * @param size Desired size of the memory block, in BYTES.
 * @return ei_tracked_unique_ptr
 */
-__attribute__((unused)) static ei_unique_ptr_t make_tracked_unique_ptr(void* ptr_in, size_t size) {
+__attribute__((warn_unused_result)) __attribute__((unused))
+static ei_unique_ptr_t make_tracked_unique_ptr(void* ptr_in, size_t size)
+{
     auto ptr = reinterpret_cast<void**>(ptr_in);
     *ptr = ei_malloc(size);
     return ei_unique_ptr_t(*ptr, ei_free);
