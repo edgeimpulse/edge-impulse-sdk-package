@@ -25,6 +25,12 @@
 #define __has_include 1
 #endif // __has_include
 
+// Arduino build defines abs as a macro. That is invalid C++, and breaks
+// libc++'s <complex> header, undefine it.
+#ifdef abs
+#undef abs
+#endif
+
 #include <stdint.h>
 #include <string.h>
 #include <stddef.h>

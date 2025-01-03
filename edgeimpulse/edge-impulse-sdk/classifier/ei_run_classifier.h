@@ -19,7 +19,6 @@
 #define _EDGE_IMPULSE_RUN_CLASSIFIER_H_
 
 #include "ei_model_types.h"
-#include "sdk_version.h"
 #include "model-parameters/model_metadata.h"
 
 #include "ei_run_dsp.h"
@@ -61,19 +60,12 @@
 #include "edge-impulse-sdk/classifier/inferencing_engines/memryx.h"
 #elif EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_ETHOS_LINUX
 #include "edge-impulse-sdk/classifier/inferencing_engines/ethos_linux.h"
+#elif EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_ATON
+#include "edge-impulse-sdk/classifier/inferencing_engines/aton.h"
 #elif EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_NONE
 // noop
 #else
 #error "Unknown inferencing engine"
-#endif
-
-// strictly require sdk version and studio version macros to match
-#if EI_SDK_VERSION_MAJOR != EI_STUDIO_VERSION_MAJOR || EI_SDK_VERSION_MINOR != EI_STUDIO_VERSION_MINOR || EI_SDK_VERSION_PATCH != EI_STUDIO_VERSION_PATCH
-#if EI_SDK_VERSION_MAJOR == 0
-#pragma message "SDK version not set."
-#else
-#error "Version mismatch between edge-impulse-sdk and the model (model-parameters and tflite-model). Make sure you use the same version for both. Advised to download the deployment files again from Edge Impulse."
-#endif
 #endif
 
 // This file has an implicit dependency on ei_run_dsp.h, so must come after that include!
@@ -246,7 +238,7 @@ extern "C" EI_IMPULSE_ERROR process_impulse(ei_impulse_handle_t *handle,
         return EI_IMPULSE_INFERENCE_ERROR;
     }
 
-#if (EI_CLASSIFIER_QUANTIZATION_ENABLED == 1 && (EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TFLITE || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TENSAIFLOW || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_ONNX_TIDL)) || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_DRPAI
+#if (EI_CLASSIFIER_QUANTIZATION_ENABLED == 1 && (EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TFLITE || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TENSAIFLOW || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_ONNX_TIDL) || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_DRPAI || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_ATON)
     // Shortcut for quantized image models
     ei_learning_block_t block = handle->impulse->learning_blocks[0];
     if (can_run_classifier_image_quantized(handle->impulse, block) == EI_IMPULSE_OK) {
@@ -605,7 +597,8 @@ __attribute__((unused)) static EI_IMPULSE_ERROR can_run_classifier_image_quantiz
     if (impulse->inferencing_engine != EI_CLASSIFIER_TFLITE
         && impulse->inferencing_engine != EI_CLASSIFIER_TENSAIFLOW
         && impulse->inferencing_engine != EI_CLASSIFIER_DRPAI
-        && impulse->inferencing_engine != EI_CLASSIFIER_ONNX_TIDL) // check later
+        && impulse->inferencing_engine != EI_CLASSIFIER_ONNX_TIDL
+        && impulse->inferencing_engine != EI_CLASSIFIER_ATON) // check later
     {
         return EI_IMPULSE_UNSUPPORTED_INFERENCING_ENGINE;
     }
@@ -634,7 +627,7 @@ __attribute__((unused)) static EI_IMPULSE_ERROR can_run_classifier_image_quantiz
     return EI_IMPULSE_OK;
 }
 
-#if EI_CLASSIFIER_QUANTIZATION_ENABLED == 1 && (EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TFLITE || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TENSAIFLOW || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_DRPAI || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_ONNX_TIDL)
+#if EI_CLASSIFIER_QUANTIZATION_ENABLED == 1 && (EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TFLITE || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_TENSAIFLOW || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_DRPAI || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_ONNX_TIDL || EI_CLASSIFIER_INFERENCING_ENGINE == EI_CLASSIFIER_ATON)
 
 /**
  * Special function to run the classifier on images, only works on TFLite models (either interpreter, EON, tensaiflow, drpai, tidl, memryx)

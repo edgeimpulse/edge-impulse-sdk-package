@@ -95,6 +95,12 @@ __attribute__((weak)) void ei_printf_float(float f) {
     ei_printf("%s", s);
 }
 
+__attribute__((weak)) void ei_putchar(char c)
+{
+    /* Send char to serial output */
+    putchar(c);
+}
+
 __attribute__((weak)) void *ei_malloc(size_t size) {
     return malloc(size);
 }

@@ -5,13 +5,16 @@
 	<name>EI-SDK</name>
 	<license>LICENSE-apache-2.0.txt</license>
 	<description>Edge Impulse SDK</description>
-	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.65.0/</url>
+	<url>https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.66.3/</url>
 	<supportContact>hello@edgeimpulse.com</supportContact>
 	<repository type="git">https://github.com/edgeimpulse/edge-impulse-sdk-pack.git</repository>
 	<releases>
-		<release version="1.65.0" tag="v1.65.0" date="2024-12-20" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.65.0/EdgeImpulse.EI-SDK.1.65.0.pack">
+		<release version="1.66.3" tag="v1.66.3" date="2025-01-03" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.66.3/EdgeImpulse.EI-SDK.1.66.3.pack">
       		EI-SDK
     	</release>	
+		<release version="1.65.0" tag="v1.65.0" date="2024-12-20" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.65.0/EdgeImpulse.EI-SDK.1.65.0.pack">
+      		EI-SDK
+    	</release>
 		<release version="1.64.4" tag="v1.64.4" date="2024-12-19" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.64.4/EdgeImpulse.EI-SDK.1.64.4.pack">
       		EI-SDK
     	</release>
@@ -99,9 +102,6 @@
 		<release version="1.52.11" tag="v1.52.11" date="2024-06-25" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.11/EdgeImpulse.EI-SDK.1.52.11.pack">
       		EI-SDK
     	</release>
-		<release version="1.52.10" tag="v1.52.10" date="2024-06-24" url="https://github.com/edgeimpulse/edge-impulse-sdk-pack/releases/download/v1.52.10/EdgeImpulse.EI-SDK.1.52.10.pack">
-      		EI-SDK
-    	</release>
 	</releases>
 	<keywords>
 		<keyword>EdgeImpulse</keyword>
@@ -146,7 +146,7 @@
     </packages>
     </requirements>
 	<components>
-		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.65.0">
+		<component Cclass="EdgeImpulse" Cgroup="SDK" Cversion="1.66.3">
 			<description>Edge Impulse SDK</description>	
 				<!-- short component description -->
 				<files>
@@ -387,7 +387,6 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_signal_with_range.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_fill_result_struct.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_model_types.h"/>
-					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/sdk_version.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_classifier_smooth.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/ei_signal_with_axes.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/anomaly.h"/>
@@ -400,6 +399,7 @@
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/tflite_full.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/ethos_linux.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/tflite_helper.h"/>
+					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/aton.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/tflite_micro.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/tensaiflow.h"/>
 					<file category="header" name="edgeimpulse/edge-impulse-sdk/classifier/inferencing_engines/memryx.h"/>

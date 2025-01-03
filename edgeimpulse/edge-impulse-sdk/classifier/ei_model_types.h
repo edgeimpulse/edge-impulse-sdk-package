@@ -43,6 +43,7 @@
 #define EI_CLASSIFIER_ONNX_TIDL                  11
 #define EI_CLASSIFIER_MEMRYX                     12
 #define EI_CLASSIFIER_ETHOS_LINUX                13
+#define EI_CLASSIFIER_ATON                       14
 
 #define EI_CLASSIFIER_SENSOR_UNKNOWN             -1
 #define EI_CLASSIFIER_SENSOR_MICROPHONE          1
