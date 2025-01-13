@@ -1333,25 +1333,18 @@ public:
             src_size = n_fft;
         }
 
-        // declare input and output arrays
-        float *fft_input_buffer = NULL;
-        if (src_size >= n_fft) { // technically they can only be equal or src < n_fft, b/c of step above
-            fft_input_buffer = (float*)src;
-        } // else we need to copy over and pad
-
-        // If fft_input_buffer is NULL (see above), then the constructor will allocate a new buffer
-        EI_DSP_MATRIX_B(fft_input, 1, n_fft, fft_input_buffer);
+        // Unfortunately, arm fft (at least) modifies the input buffer AND does not work in place
+        // So we have to copy the input to a new buffer
+        EI_DSP_MATRIX(fft_input, 1, n_fft);
         if (!fft_input.buffer) {
             EIDSP_ERR(EIDSP_OUT_OF_MEM);
         }
 
         // If the buffer wasn't assigned to source above, let's copy and pad
-        if (!fft_input_buffer) {
-            // copy from src to fft_input
-            memcpy(fft_input.buffer, src, src_size * sizeof(float));
-            // pad to the rigth with zeros
-            memset(fft_input.buffer + src_size, 0, (n_fft - src_size) * sizeof(float));
-        }
+        // copy from src to fft_input
+        memcpy(fft_input.buffer, src, src_size * sizeof(float));
+        // pad to the rigth with zeros
+        memset(fft_input.buffer + src_size, 0, (n_fft - src_size) * sizeof(float));
 
         auto res = ei::fft::hw_r2c_fft(fft_input.buffer, output, n_fft);
         if (handle_fft_hw_failure(res, n_fft)) {

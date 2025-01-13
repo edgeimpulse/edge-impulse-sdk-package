@@ -102,13 +102,13 @@ therefore changes are allowed. */
 __attribute__((unused)) void display_results(ei_impulse_handle_t *handle, ei_impulse_result_t* result)
 {
     // print the predictions
-    ei_printf("Timing: DSP ");
+    ei_printf("Predictions (DSP: ");
     result->timing.dsp_us ? ei_printf_float((float)result->timing.dsp_us/1000) : ei_printf("%d", result->timing.dsp);
-    ei_printf(" ms, inference ");
+    ei_printf(" ms., Classification: ");
     result->timing.classification_us ? ei_printf_float((float)result->timing.classification_us/1000) : ei_printf("%d", result->timing.classification);
-    ei_printf(" ms, anomaly ");
+    ei_printf(" ms., Anomaly: ");
     result->timing.anomaly_us ? ei_printf_float((float)result->timing.anomaly_us/1000) : ei_printf("%d", result->timing.anomaly);
-    ei_printf(" ms\r\n");
+    ei_printf("ms.): \n");
 
 #if EI_CLASSIFIER_OBJECT_DETECTION == 1
     ei_printf("#Object detection results:\r\n");
