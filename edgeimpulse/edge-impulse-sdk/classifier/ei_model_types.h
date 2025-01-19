@@ -86,6 +86,10 @@
 #define EI_CLASSIFIER_CLASSIFICATION_MODE_ANOMALY_KMEANS      6
 #define EI_CLASSIFIER_CLASSIFICATION_MODE_DSP                 7
 
+#ifndef EI_CLASSIFIER_DSP_AXES_INDEX_TYPE
+#define EI_CLASSIFIER_DSP_AXES_INDEX_TYPE       uint8_t
+#endif // EI_CLASSIFIER_DSP_AXES_INDEX_TYPE
+
 struct ei_impulse;
 class ei_impulse_handle_t;
 
@@ -123,7 +127,7 @@ typedef struct {
     size_t n_output_features;
     extract_fn_t extract_fn;
     void *config;
-    uint8_t *axes;
+    EI_CLASSIFIER_DSP_AXES_INDEX_TYPE *axes;
     uint32_t axes_size;
     int version;  // future proof, can easily add to this struct now
     DspHandle* (*factory)(void* config, float sampling_freq); // nullptr means no state

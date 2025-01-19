@@ -28,7 +28,7 @@ using namespace ei;
 
 class SignalWithAxes {
 public:
-    SignalWithAxes(signal_t *original_signal, uint8_t *axes, size_t axes_count, const ei_impulse_t *impulse):
+    SignalWithAxes(signal_t *original_signal, EI_CLASSIFIER_DSP_AXES_INDEX_TYPE *axes, size_t axes_count, const ei_impulse_t *impulse):
         _original_signal(original_signal), _axes(axes), _axes_count(axes_count), _impulse(impulse)
     {
 
@@ -70,7 +70,7 @@ public:
 
 private:
     signal_t *_original_signal;
-    uint8_t *_axes;
+    EI_CLASSIFIER_DSP_AXES_INDEX_TYPE *_axes;
     size_t _axes_count;
     const ei_impulse_t *_impulse;
     signal_t wrapped_signal;

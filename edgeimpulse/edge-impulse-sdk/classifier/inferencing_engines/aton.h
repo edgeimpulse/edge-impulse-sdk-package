@@ -139,6 +139,19 @@ EI_IMPULSE_ERROR run_nn_inference_image_quantized(
         }
 
     }
+    // if we copy the output, we don't need to process it as classification
+    else
+    {
+        if (!result->copy_output) {
+            bool int8_output = 1; //quantized hardcoded for now
+            if (int8_output) {
+                fill_res = fill_result_struct_i8(impulse, result, (int8_t *)nn_out, nn_out_info[0].offset[0], nn_out_info[0].scale[0], debug);
+            }
+            else {
+                fill_res = fill_result_struct_f32(impulse, result,(float *)nn_out, debug);
+            }
+        }
+    }
 
     result->timing.classification_us = ei_read_timer_us() - ctx_start_us;
 
